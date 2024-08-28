@@ -9,7 +9,7 @@ const SearchBar = () => {
             <Link to="/" className="search-bar">메뉴 검색</Link>
             <IoSearch className="search-icon" />
         </div>
-    )
-}
+    );
+};
 
 export default SearchBar;
