@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -44,3 +45,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+=======
+# Mechulia_Front
+메뉴 추천 웹사이트(후에 상세 설명 추가)
+>>>>>>> 2377513a90282eb63f230ca69aa0fdbfc573efe5
