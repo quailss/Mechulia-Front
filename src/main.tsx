@@ -1,8 +1,12 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navigation from "./components/nav";
 
-function Main(){
+const Main = () =>{
     return(
-        <p>메인 페이지 입니다.</p>
+       <Router>
+            <Navigation />
+        </Router>
     );
 }
 

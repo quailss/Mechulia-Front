@@ -1,0 +1,67 @@
+@font-face {
+    font-family: 'LOTTERIACHAB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/LOTTERIACHAB.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    width: 100vw;
+    min-width: 1024px;
+    overflow-x: auto;
+    font-family: 'GangwonEdu_OTFBoldA';
+}
+
+.nav-container{
+    justify-content: space-between;
+    display: flex;
+    padding: 30px 100px;
+    background-color: rgb(38, 158, 38);
+    align-items: center;
+    height: 40px;
+}
+
+.logo-title{
+    font-size: 35px;
+    font-family: 'LOTTERIACHAB' !important;
+    color: black;
+    text-decoration: none;
+}
+
+.login{
+    font-size: 23px;
+    text-decoration: none;
+    color: black;
+    margin-right: 50px;
+}
+
+.membership{
+    font-size: 23px;
+    text-decoration: none;
+    color: black;
+}
+
+.login:hover,
+.membership:hover {
+    text-decoration: underline solid black;
+}
+
+.logout{
+    font-size: 23px;
+    background-color: transparent;
+    border: none;
+    font-family: 'GangwonEdu_OTFBoldA';
+    color: rgb(189, 28, 28);
+    cursor: pointer;
+}
+
+.logout:hover{
+    text-decoration: underline solid rgb(189, 28, 28);
+}
