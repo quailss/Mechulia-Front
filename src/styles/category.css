@@ -14,14 +14,15 @@ html, body {
 
 .category-container{
     position: relative;
+    width: 60vw;
     min-width: 1024px;
+    max-width: 100%;
     white-space: nowrap;
     padding: 15px;
     background-color: rgb(38, 158, 38);
-    margin-left: 150px;
-    margin-right: 150px;
     display: flex;
     justify-content: center;
+    margin: 0 auto;
 }
 
 .category-item{
