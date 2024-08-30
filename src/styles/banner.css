@@ -1,0 +1,12 @@
+
+.banner-container {
+    position: relative;
+    height: 400px;
+    min-width: 1024px;
+    background-color: lightgray;
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    display: flex;
+    justify-content: center;
+}

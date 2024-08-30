@@ -1,0 +1,91 @@
+/* ThemeSlider.css */
+.slider-wrapper {
+    position: relative;
+    width: 100%; 
+    min-width: 1024px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+  }
+
+.theme-slider-container {
+    position: relative;
+    overflow: hidden;
+    width: calc(100vw - 400px);
+    min-width: 1024px;
+    margin: auto;
+    top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide-content {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: calc(300px * 4 + 20px * 3);
+    justify-content: space-between;
+    flex-basis: 100%;
+}
+
+.slide {
+    position: relative;
+    min-width: 300px;
+    height: 200px;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    margin-right: 30px;
+    cursor: pointer;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+
+.slide img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.slide-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 20px;
+    z-index: 1;
+}
+
+.slider-btn {
+    position: absolute;
+    top: 60%;
+    transform: translateY(-50%);
+    background-color: white;
+    font-size: 25px;
+    padding: 7px 10px;
+    border-radius: 360px;
+    border: 2px solid black;
+    cursor: pointer;
+    display: flex;
+    z-index: 2;
+}
+
+.prev-btn {
+    left: 150px;
+}
+
+.next-btn {
+    right: 130px;
+}
