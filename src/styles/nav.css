@@ -13,20 +13,34 @@
 }
 
 html, body {
+    height: 100%;
     width: 100vw;
     min-width: 1024px;
     overflow-x: auto;
     font-family: 'GangwonEdu_OTFBoldA';
+    margin: 0; 
 }
 
-.nav-container{
+body {
+    padding-top: 100px; 
+}
+
+.nav-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     justify-content: space-between;
     display: flex;
     padding: 30px 100px;
     background-color: rgb(38, 158, 38);
     align-items: center;
-    height: 40px;
+    height: 100px !important; 
+    z-index: 1000;
+    box-sizing: border-box;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.7);
 }
+
 
 .logo-title{
     font-size: 35px;

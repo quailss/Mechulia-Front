@@ -10,6 +10,7 @@ html, body {
     min-width: 1024px;
     overflow-x: auto;
     font-family: 'GangwonEdu_OTFBoldA';
+    padding-top: 40px;
 }
 
 .recommendation-theme{
@@ -24,4 +25,32 @@ html, body {
     margin: 0 auto;
     font-size: 30px;
     top: 40px;
+}
+
+.nearby-restaurant{
+    position: relative;
+    width: 60vw;
+    min-width: 1024px;
+    max-width: 100%;
+    white-space: nowrap;
+    padding: 15px;
+    display: flex;
+    justify-content: left;
+    margin: 0 auto;
+    font-size: 30px;
+    top: 100px;
+}
+
+.recipe{
+    position: relative;
+    width: 60vw;
+    min-width: 1024px;
+    max-width: 100%;
+    white-space: nowrap;
+    padding: 15px;
+    display: flex;
+    justify-content: left;
+    margin: 0 auto;
+    font-size: 30px;
+    top: 400px;
 }

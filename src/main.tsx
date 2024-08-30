@@ -19,6 +19,8 @@ const Main: React.FC = () => {
         <Banner />
         <h2 className="recommendation-theme">테마별 음식 추천</h2>
         <ThemeSlider />
+        <h2 className="nearby-restaurant">근처 음식점</h2>
+        <h2 className="recipe">레시피</h2>
       </Router>
     </Provider>
   );
