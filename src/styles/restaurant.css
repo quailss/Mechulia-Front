@@ -1,0 +1,23 @@
+.location-container{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    min-width: 1024px;
+}
+
+.location-container .location-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.location-container label {
+    display: flex;
+    flex-direction: column;
+    font-size: 25px;
+}
+
+.location-container select {
+    padding: 5px;
+    font-size: 20px;
+}

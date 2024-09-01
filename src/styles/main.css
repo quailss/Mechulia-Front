@@ -10,7 +10,7 @@ html, body {
     min-width: 1024px;
     overflow-x: auto;
     font-family: 'GangwonEdu_OTFBoldA';
-    padding-top: 150px;
+    padding-top: 180px;
 }
 
 .recommendation-theme{
@@ -53,4 +53,15 @@ html, body {
     margin: 0 auto;
     font-size: 30px;
     top: 400px;
+}
+
+.restaurant-container{
+    position: relative;
+    width: 60vw;
+    min-width: 1024px;
+    max-width: 100%;
+    display: flex;
+    justify-content: left;
+    margin: 0 auto;
+    top: 120px;
 }

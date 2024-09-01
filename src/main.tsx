@@ -7,6 +7,7 @@ import SearchBar from './components/searchBar';
 import Category from './components/category';
 import Banner from './components/banner';
 import ThemeSlider from './components/themeSlider';
+import Restaurant from './components/restaurant';
 import './styles/main.css';
 
 const Main: React.FC = () => {
@@ -19,7 +20,10 @@ const Main: React.FC = () => {
         <Banner />
         <h2 className="recommendation-theme">테마별 음식 추천</h2>
         <ThemeSlider />
-        <h2 className="nearby-restaurant">근처 음식점</h2>
+        <h2 className="nearby-restaurant">음식점</h2>
+        <div className="restaurant-container">
+          <Restaurant />
+        </div>
         <h2 className="recipe">메뉴 추천</h2>
       </Router>
     </Provider>
