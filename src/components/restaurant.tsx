@@ -18,8 +18,9 @@ const LocationSelector: React.FC = () => {
     const [selectedProvince, setSelectedProvince] = useState<string>('서울특별시');
     const [selectedCity, setSelectedCity] = useState<string>('');
     const [cities, setCities] = useState<string[]>([]);
+
     const dispatch = useAppDispatch(); 
-    const currentIndex = useSelector((state: RootState) => state.slider.currentIndex);
+    const { restaurants, currentIndex, status } = useAppSelector((state) => state.restaurants);
 
     const slideContainerRef = useRef<HTMLDivElement>(null);
     const [slideWidth, setSlideWidth] = useState(0);
@@ -71,35 +72,65 @@ const LocationSelector: React.FC = () => {
     }, [selectedProvince, selectedCity, dispatch]);
 
     return (
-        <div className="location-container">
+        <div>
+          <div className="location-container">
             <div className="location-dropdown">
-                <label>
-                    시/도:
-                </label>
-                <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
-                <option value=""></option>
+              <label>시/도:</label>
+              <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
+                <option value="">선택하세요</option>
                 {Object.keys(locations).map((province) => (
-                    <option key={province} value={province}>
+                  <option key={province} value={province}>
                     {province}
-                    </option>
+                  </option>
                 ))}
-                </select>
+              </select>
             </div>
             <div className="location-dropdown">
-                <label>
-                    시/군/구:
-                </label>
-                <select value={selectedCity} onChange={(e) => setSelectedCity(e.target.value)} disabled={!selectedProvince}>
+              <label>시/군/구:</label>
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                disabled={!selectedProvince}
+              >
                 <option value="">선택하세요</option>
                 {cities.map((city) => (
-                    <option key={city} value={city}>
+                  <option key={city} value={city}>
                     {city}
-                    </option>
+                  </option>
                 ))}
-                </select>
+              </select>
             </div>
+          </div>
+    
+          {status === 'loading' && <p>Loading...</p>}
+          {status === 'failed' && <p>Failed to load restaurants.</p>}
+          {status === 'succeeded' && restaurants.length > 0 && (
+            <div className="slider-container" ref={slideContainerRef}>
+              <button onClick={() => dispatch(prevSlide())} className="slider-button">{'<'}</button>
+              <div
+                className="slider-content"
+                style={{ transform: `translateX(-${currentIndex * slideWidth}px)` }}
+              >
+                {restaurants.slice(currentIndex, currentIndex + 3).map((restaurant) => (
+                  <div
+                    key={restaurant.id}
+                    className="restaurant-card"
+                    style={{ width: slideWidth }}
+                  >
+                    <h3>{restaurant.place_name}</h3>
+                    <p>{restaurant.road_address_name}</p>
+                    <p>{restaurant.phone}</p>
+                    <a href={restaurant.place_url} target="_blank" rel="noopener noreferrer">
+                      자세히 보기
+                    </a>
+                  </div>
+                ))}
+              </div>
+              <button onClick={() => dispatch(nextSlide())} className="slider-button">{'>'}</button>
+            </div>
+          )}
         </div>
-    );
-};
+      );
+    };
 
 export default LocationSelector;

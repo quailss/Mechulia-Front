@@ -31,22 +31,24 @@ export const fetchRestaurants = createAsyncThunk(
   'restaurants/fetchRestaurants',
   async ({ region, city }: { region: string; city: string }) => {
     const query = `${region} ${city}`;
+
     const response = await axios.get(
       `https://dapi.kakao.com/v2/local/search/keyword.json`,
       {
         params: {
-          query,
+          query, // 쿼리 파라미터로 전달할 값
           category_group_code: 'FD6',
-          size: 24,  // 최대 24개의 결과만 가져오기
         },
         headers: {
-          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`,
-        },
+          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`, // Authorization 헤더 설정
+        }
       }
     );
-    return response.data.documents;
+
+    return response.data.documents; // 응답 데이터 반환
   }
 );
+
 
 const restaurantSlice = createSlice({
   name: 'restaurants',
