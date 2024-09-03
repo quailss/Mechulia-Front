@@ -10,23 +10,25 @@ interface Restaurant {
   place_url: string;
   x: string;
   y: string;
+  //네이버 api를 이용해 이미지 가져오기
+  place_img?: string | null;
 }
 
 interface RestaurantState {
   restaurants: Restaurant[];
-  currentIndex: number;  // currentIndex를 상태에 추가
+  currentIndex: number; 
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: RestaurantState = {
   restaurants: [],
-  currentIndex: 0,  // currentIndex 초기 값 추가
+  currentIndex: 0,  
   status: 'idle',
   error: null,
 };
 
-// 비동기 API 호출을 위한 thunk 생성
+// 카카오 api를 이용해 음식점 정보 가져오기
 export const fetchRestaurants = createAsyncThunk(
   'restaurants/fetchRestaurants',
   async ({ region, city }: { region: string; city: string }) => {
@@ -45,9 +47,44 @@ export const fetchRestaurants = createAsyncThunk(
       }
     );
 
-    return response.data.documents; // 응답 데이터 반환
+    const restaurants = response.data.documents;
+
+    // 각 음식점에 대해 네이버 이미지 검색을 수행하고, place_img 필드를 추가
+    const restaurantsWithImages = await Promise.all(
+      restaurants.map(async (restaurant: Restaurant) => {
+        const imageUrl = await fetchImage(restaurant.place_name);
+        return {
+          ...restaurant,
+          place_img: imageUrl,  // 썸네일 이미지를 place_img로 설정
+        };
+      })
+    );
+
+    return restaurantsWithImages.slice(0, 24); // 최대 24개의 음식점 정보만 반환
   }
 );
+
+//네이버 이미지 검색 api를 이용해 이미지 가져오기
+async function fetchImage(placeName: string): Promise<string | null> {
+
+  try {
+    const response = await axios.get('/api/v1/search/image', {
+      params: {
+        query: placeName,
+        display: 1,
+      },
+      headers: {
+        'X-Naver-Client-ID': `${process.env.REACT_APP_NAVER_CLIENT_ID}`,
+        'X-Naver-Client-Secret': `${process.env.REACT_APP_NAVER_CLIENT_SECRET}`,
+      }
+    });
+    const items = response.data.items;
+    return items.length > 0 ? items[0].thumbnail : null;
+  } catch (error) {
+    console.error(`Failed to fetch image for ${placeName}`, error);
+    return null;
+  }
+}
 
 
 const restaurantSlice = createSlice({
@@ -76,7 +113,7 @@ const restaurantSlice = createSlice({
       .addCase(fetchRestaurants.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.restaurants = action.payload.slice(0, 24); // 최대 24개의 음식점 정보 저장
-        state.currentIndex = 0;  // 슬라이드 인덱스 초기화
+        state.currentIndex = 0; 
       })
       .addCase(fetchRestaurants.rejected, (state, action) => {
         state.status = 'failed';

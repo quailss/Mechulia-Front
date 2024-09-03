@@ -16,7 +16,7 @@ const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const LocationSelector: React.FC = () => {
     const [selectedProvince, setSelectedProvince] = useState<string>('서울특별시');
-    const [selectedCity, setSelectedCity] = useState<string>('');
+    const [selectedCity, setSelectedCity] = useState<string>('종로구');
     const [cities, setCities] = useState<string[]>([]);
 
     const dispatch = useAppDispatch(); 
@@ -47,7 +47,7 @@ const LocationSelector: React.FC = () => {
     useEffect(() => {
         if (selectedProvince) {
             setCities(locations[selectedProvince]);
-            setSelectedCity('');
+            setSelectedCity('종로구');
         } else {
             setCities([]);
             setSelectedCity('');
@@ -105,10 +105,10 @@ const LocationSelector: React.FC = () => {
           {status === 'loading' && <p>Loading...</p>}
           {status === 'failed' && <p>Failed to load restaurants.</p>}
           {status === 'succeeded' && restaurants.length > 0 && (
-            <div className="slider-container" ref={slideContainerRef}>
-              <button onClick={() => dispatch(prevSlide())} className="slider-button">{'<'}</button>
+            <div className="restaurant-container" ref={slideContainerRef}>
+              <button onClick={goToPrev} className="slider-button prev-button">{'←'}</button>
               <div
-                className="slider-content"
+                className="restaurant-content"
                 style={{ transform: `translateX(-${currentIndex * slideWidth}px)` }}
               >
                 {restaurants.slice(currentIndex, currentIndex + 3).map((restaurant) => (
@@ -117,16 +117,12 @@ const LocationSelector: React.FC = () => {
                     className="restaurant-card"
                     style={{ width: slideWidth }}
                   >
+                    {restaurant.place_img && <img src={restaurant.place_img} alt={restaurant.place_name} />}
                     <h3>{restaurant.place_name}</h3>
-                    <p>{restaurant.road_address_name}</p>
-                    <p>{restaurant.phone}</p>
-                    <a href={restaurant.place_url} target="_blank" rel="noopener noreferrer">
-                      자세히 보기
-                    </a>
                   </div>
                 ))}
               </div>
-              <button onClick={() => dispatch(nextSlide())} className="slider-button">{'>'}</button>
+              <button onClick={goToNext} className="slider-button next-button">{'→'}</button>
             </div>
           )}
         </div>
