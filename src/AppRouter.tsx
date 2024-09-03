@@ -1,14 +1,16 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Main from "./main";
+import Login from './login';
+import CreateAccount from './createAccount';
 
 function AppRouter() {
-    return(
-        <Router>
-            <Routes>
-                <Route path="*" element={<Main />} />
-            </Routes>
-        </Router>
+    return (
+        <Routes>
+            <Route path="/" element={<Main />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/create-account" element={<CreateAccount />} />
+        </Routes>
     );
 }
 

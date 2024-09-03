@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import Navigation from './components/nav';
@@ -13,21 +12,20 @@ import './styles/main.css';
 const Main: React.FC = () => {
   return (
     <Provider store={store}>
-      <Router>
-        <Navigation />
-        <SearchBar />
-        <Category />
-        <Banner />
-        <h2 className="recommendation-theme">테마별 음식 추천</h2>
-        <ThemeSlider />
-        <h2 className="nearby-restaurant">음식점</h2>
-        <div className="restaurant-container">
-          <Restaurant />
-        </div>
-        <h2 className="recipe">메뉴 추천</h2>
-      </Router>
+      <Navigation />
+      <SearchBar />
+      <Category />
+      <Banner />
+      <h2 className="recommendation-theme">테마별 음식 추천</h2>
+      <ThemeSlider />
+      <h2 className="nearby-restaurant">음식점</h2>
+      <div className="restaurant-container">
+        <Restaurant />
+      </div>
+      <h2 className="recipe">메뉴 추천</h2>
     </Provider>
   );
 };
 
 export default Main;
+
