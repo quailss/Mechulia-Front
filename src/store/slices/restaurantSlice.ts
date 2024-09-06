@@ -28,7 +28,48 @@ const initialState: RestaurantState = {
   error: null,
 };
 
-// 카카오 api를 이용해 음식점 정보 가져오기
+// 이미지 캐시를 위한 Map (검색어를 키로, 이미지 URL을 값으로 저장)
+const imageCache = new Map<string, string>();
+
+// 네이버 이미지 검색 api를 이용해 이미지 가져오기 (딜레이 및 캐싱 적용)
+async function fetchImageWithDelayAndCache(placeName: string, delay: number): Promise<string | null> {
+  // 캐시된 이미지가 있는 경우, 캐시에서 가져오기
+  if (imageCache.has(placeName)) {
+    console.log(`이미 캐시된 이미지 사용: ${placeName}`);
+    return imageCache.get(placeName) || null;
+  }
+
+  // 요청 간 딜레이를 추가 (밀리초 단위)
+  await new Promise(resolve => setTimeout(resolve, delay));
+
+  try {
+    const response = await axios.get('/api/v1/search/image', {
+      params: {
+        query: placeName,
+        display: 1,
+      },
+      headers: {
+        'X-Naver-Client-ID': `${process.env.REACT_APP_NAVER_CLIENT_ID}`,
+        'X-Naver-Client-Secret': `${process.env.REACT_APP_NAVER_CLIENT_SECRET}`,
+      }
+    });
+
+    const items = response.data.items;
+    const imageUrl = items.length > 0 ? items[0].thumbnail : 'https://github.com/quailss/image-data/blob/main/noimage.png?raw=true';
+
+    // 캐시에 저장
+    if (imageUrl) {
+      imageCache.set(placeName, imageUrl);
+    }
+
+    return imageUrl;
+  } catch (error) {
+    console.error(`Failed to fetch image for ${placeName}`, error);
+    return 'https://github.com/quailss/image-data/blob/main/noimage.png?raw=true';
+  }
+}
+
+// 카카오 API를 이용해 음식점 정보 가져오기
 export const fetchRestaurants = createAsyncThunk(
   'restaurants/fetchRestaurants',
   async ({ region, city, category }: { region: string; city: string; category?: string }) => {
@@ -53,16 +94,20 @@ export const fetchRestaurants = createAsyncThunk(
       }
     );
 
-
     const restaurants = response.data.documents;
 
-    // 각 음식점에 대해 네이버 이미지 검색을 수행하고, place_img 필드를 추가
+    // 각 음식점에 대해 네이버 이미지 검색을 수행하고, place_img 필드를 추가 (딜레이 추가)
     const restaurantsWithImages = await Promise.all(
-      restaurants.map(async (restaurant: Restaurant) => {
-        const imageUrl = await fetchImage(restaurant.place_name);
+      restaurants.map(async (restaurant: Restaurant, index: number) => {
+        // 딜레이를 200ms씩 추가하여 요청 빈도를 조정
+        const delay = index * 200;
+
+        // 이미지 요청에 캐싱 및 딜레이 적용
+        const imageUrl = await fetchImageWithDelayAndCache(restaurant.place_name, delay);
+
         return {
           ...restaurant,
-          place_img: imageUrl,  
+          place_img: imageUrl,
         };
       })
     );
@@ -71,27 +116,6 @@ export const fetchRestaurants = createAsyncThunk(
   }
 );
 
-//네이버 이미지 검색 api를 이용해 이미지 가져오기
-async function fetchImage(placeName: string): Promise<string | null> {
-
-  try {
-    const response = await axios.get('/api/v1/search/image', {
-      params: {
-        query: placeName,
-        display: 1,
-      },
-      headers: {
-        'X-Naver-Client-ID': `${process.env.REACT_APP_NAVER_CLIENT_ID}`,
-        'X-Naver-Client-Secret': `${process.env.REACT_APP_NAVER_CLIENT_SECRET}`,
-      }
-    });
-    const items = response.data.items;
-    return items.length > 0 ? items[0].thumbnail : null;
-  } catch (error) {
-    console.error(`Failed to fetch image for ${placeName}`, error);
-    return null;
-  }
-}
 
 
 const restaurantSlice = createSlice({

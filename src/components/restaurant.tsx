@@ -64,12 +64,20 @@ const LocationSelector: React.FC = () => {
 
     //다음 슬라이드 이동
     const goToNext = () => {
+      const remainingItems = restaurants.length - (currentIndex + 1);
+    
+      if (remainingItems > 0) {
         dispatch(nextSlide());
+      } else {
+      }
     };
 
     //이전 슬라이드 이동
     const goToPrev = () => {
+      if (currentIndex > 0) {
         dispatch(prevSlide());
+      } else {
+      }
     };
 
     return (
@@ -107,7 +115,7 @@ const LocationSelector: React.FC = () => {
           {status === 'failed' && <p>Failed to load restaurants.</p>}
           {status === 'succeeded' && restaurants.length > 0 && (
             <div className="restaurant-container" ref={slideContainerRef}>
-              <button onClick={goToPrev} className="slider-button prev-button">{'←'}</button>
+              <button onClick={goToPrev} className="slider-button prev-button" disabled={currentIndex === 0}>{'←'}</button>
               <div
                 className="restaurant-content"
                 style={{ transform: `translateX(-${currentIndex * slideWidth}px)` }}
@@ -123,7 +131,7 @@ const LocationSelector: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <button onClick={goToNext} className="slider-button next-button">{'→'}</button>
+              <button onClick={goToNext} className="slider-button next-button" disabled={currentIndex >= restaurants.length - 3}>{'→'}</button>
             </div>
           )}
         </div>
