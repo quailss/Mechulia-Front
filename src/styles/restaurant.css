@@ -31,6 +31,10 @@
     align-items: center;
 }
 
+.margin-top{
+    top: 50px !important;
+}
+
 .restaurant-content{
     position: relative;
     overflow: hidden;
@@ -82,9 +86,9 @@
 }
 
 .prev-button {
-    left: -60px; 
+    left: -30px; 
 }
 
 .next-button {
-    right: -60px;
+    right: -30px;
 }

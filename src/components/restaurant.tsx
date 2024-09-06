@@ -114,7 +114,7 @@ const LocationSelector: React.FC = () => {
           {status === 'loading' && <p>Loading...</p>}
           {status === 'failed' && <p>Failed to load restaurants.</p>}
           {status === 'succeeded' && restaurants.length > 0 && (
-            <div className="restaurant-container" ref={slideContainerRef}>
+            <div className="restaurant-container margin-top" ref={slideContainerRef}>
               <button onClick={goToPrev} className="slider-button prev-button" disabled={currentIndex === 0}>{'←'}</button>
               <div
                 className="restaurant-content"
