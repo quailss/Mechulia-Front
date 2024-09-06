@@ -20,10 +20,18 @@ const LocationSelector: React.FC = () => {
     const [cities, setCities] = useState<string[]>([]);
 
     const dispatch = useAppDispatch(); 
+    const selectedCategory = useAppSelector((state) => state.category.selectedCategory);
     const { restaurants, currentIndex, status } = useAppSelector((state) => state.restaurants);
 
     const slideContainerRef = useRef<HTMLDivElement>(null);
     const [slideWidth, setSlideWidth] = useState(0);
+
+    useEffect(() => {
+      if (selectedProvince && selectedCity) {
+        console.log('API 요청 전송:', selectedProvince, selectedCity, selectedCategory);  // 로그 확인
+        dispatch(fetchRestaurants({ region: selectedProvince, city: selectedCity, category: selectedCategory || '' }));
+      }
+    }, [selectedProvince, selectedCity, selectedCategory, dispatch]); 
 
     //슬라이드 너비 업데이트
     useEffect(() => {
@@ -63,13 +71,6 @@ const LocationSelector: React.FC = () => {
     const goToPrev = () => {
         dispatch(prevSlide());
     };
-
-    //지역 선택 시 음식점 목록 업데이트
-    useEffect(() => {
-        if(selectedProvince && selectedCity) {
-            dispatch(fetchRestaurants({region: selectedProvince, city: selectedCity}));
-        }
-    }, [selectedProvince, selectedCity, dispatch]);
 
     return (
         <div>

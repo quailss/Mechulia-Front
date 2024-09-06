@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import Navigation from './components/nav';
@@ -10,6 +10,7 @@ import Restaurant from './components/restaurant';
 import './styles/main.css';
 
 const Main: React.FC = () => {
+
   return (
     <Provider store={store}>
       <Navigation />

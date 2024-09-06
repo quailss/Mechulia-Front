@@ -31,21 +31,28 @@ const initialState: RestaurantState = {
 // 카카오 api를 이용해 음식점 정보 가져오기
 export const fetchRestaurants = createAsyncThunk(
   'restaurants/fetchRestaurants',
-  async ({ region, city }: { region: string; city: string }) => {
+  async ({ region, city, category }: { region: string; city: string; category?: string }) => {
     const query = `${region} ${city}`;
+    const categoryQuery = category ? ` ${category}` : '';
+
+    console.log(`API 요청 URL: https://dapi.kakao.com/v2/local/search/keyword.json?query=${query}${categoryQuery}&category_group_code=FD6`);
+
+    // API 요청 시 사용할 파라미터 객체
+    const params: any = {
+      query: query + categoryQuery,
+      category_group_code: 'FD6',   // 음식점 카테고리
+    };
 
     const response = await axios.get(
       `https://dapi.kakao.com/v2/local/search/keyword.json`,
       {
-        params: {
-          query, // 쿼리 파라미터로 전달할 값
-          category_group_code: 'FD6',
-        },
+        params,
         headers: {
-          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`, // Authorization 헤더 설정
-        }
+          Authorization: `KakaoAK ${process.env.REACT_APP_KAKAO_API_KEY}`,
+        },
       }
     );
+
 
     const restaurants = response.data.documents;
 
@@ -55,7 +62,7 @@ export const fetchRestaurants = createAsyncThunk(
         const imageUrl = await fetchImage(restaurant.place_name);
         return {
           ...restaurant,
-          place_img: imageUrl,  // 썸네일 이미지를 place_img로 설정
+          place_img: imageUrl,  
         };
       })
     );
