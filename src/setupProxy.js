@@ -13,14 +13,6 @@ module.exports = function(app) {
       },
     })
   );
-
-  // 로컬 서버(localhost:8080)로의 프록시 설정
-  app.use(
-    '/api',
-    createProxyMiddleware({
-      target: 'http://localhost:8080', // Spring Boot 서버의 주소
-      changeOrigin: true,
-    })
-  );
+  
 };
 
