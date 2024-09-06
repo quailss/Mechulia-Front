@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from "react";
 import locationData from '../data/location.json';
-import { fetchRestaurants, nextSlide, prevSlide, setSlide } from "../store/slices/restaurantSlice";
+import { fetchRestaurants, nextSlide, prevSlide } from "../store/slices/restaurantSlice";
 import '../styles/restaurant.css';
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
@@ -28,7 +28,6 @@ const LocationSelector: React.FC = () => {
 
     useEffect(() => {
       if (selectedProvince && selectedCity) {
-        console.log('API 요청 전송:', selectedProvince, selectedCity, selectedCategory);  // 로그 확인
         dispatch(fetchRestaurants({ region: selectedProvince, city: selectedCity, category: selectedCategory || '' }));
       }
     }, [selectedProvince, selectedCity, selectedCategory, dispatch]); 

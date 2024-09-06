@@ -24,7 +24,7 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 40px;
+    top: 80px;
 }
 
 .nearby-restaurant{
@@ -38,7 +38,7 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 100px;
+    top: 140px;
 }
 
 .recipe{
@@ -52,7 +52,7 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 400px;
+    top: 250px;
 }
 
 .restaurant-container{
@@ -63,5 +63,5 @@ html, body {
     display: flex;
     justify-content: left;
     margin: 0 auto;
-    top: 120px;
+    top: 160px;
 }

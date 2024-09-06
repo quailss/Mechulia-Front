@@ -35,7 +35,6 @@ const imageCache = new Map<string, string>();
 async function fetchImageWithDelayAndCache(placeName: string, delay: number): Promise<string | null> {
   // 캐시된 이미지가 있는 경우, 캐시에서 가져오기
   if (imageCache.has(placeName)) {
-    console.log(`이미 캐시된 이미지 사용: ${placeName}`);
     return imageCache.get(placeName) || null;
   }
 

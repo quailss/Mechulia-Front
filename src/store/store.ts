@@ -3,6 +3,7 @@ import sliderReducer from "./slices/sliderSlice";
 import locationReducer from "./slices/locationSlice";
 import restaurantReducer from "./slices/restaurantSlice";
 import categoryReducer from "./slices/categorySlice";
+import menuReducer from "./slices/menuSlice";
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         location: locationReducer,
         category: categoryReducer,
         restaurants: restaurantReducer,
+        menu: menuReducer,
     },
 });
 
