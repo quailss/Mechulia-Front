@@ -1,17 +1,16 @@
-import React, {useState} from 'react';
-import { Provider } from 'react-redux';
-import store from './store/store';
-import Navigation from './components/nav';
-import SearchBar from './components/searchBar';
-import Category from './components/category';
-import Banner from './components/banner';
-import ThemeSlider from './components/themeSlider';
-import Restaurant from './components/restaurant';
-import MenuList from './components/menuList';
-import './styles/main.css';
+import React, { useState } from "react";
+import { Provider } from "react-redux";
+import store from "./store/store";
+import Navigation from "./components/nav";
+import SearchBar from "./components/searchBar";
+import Category from "./components/category";
+import Banner from "./components/banner";
+import ThemeSlider from "./components/themeSlider";
+import Restaurant from "./components/restaurant";
+import MenuList from "./components/menuList";
+import "./styles/main.css";
 
 const Main: React.FC = () => {
-
   return (
     <Provider store={store}>
       <Navigation />
@@ -31,4 +30,3 @@ const Main: React.FC = () => {
 };
 
 export default Main;
-
