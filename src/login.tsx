@@ -97,7 +97,7 @@ const Login: React.FC = () => {
           {...register("password", {
             required: "비밀번호는 필수입니다.",
             minLength: {
-              value: 5,
+              value: 4,
               message: "비밀번호가 짧습니다.",
             },
           })}
