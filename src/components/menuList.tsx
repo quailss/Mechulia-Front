@@ -1,37 +1,76 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { fetchRecipes } from '../store/slices/menuSlice';
 import { RootState, AppDispatch } from "../store/store";
+import "../styles/menuList.css";
 
-const useAppDispatch = () => useDispatch<AppDispatch>();
-const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+interface Recipes {
+  id: string;
+  name: string;
+  image_url: string;
+  keyword1: string;
+  keyword2: string;
+  keyword3: string;
+  keyword4: string;
+  menu: string;
+}
 
 const RecipeList = () => {
-  const dispatch = useAppDispatch();
-  const { recipes, status, error } = useAppSelector((state) => state.menu);
+  // useDispatch를 사용하되, AppDispatch로 타입 지정
+  const dispatch: AppDispatch = useDispatch();
 
+  // useSelector를 사용하되, RootState로 타입 지정
+  const { recipes, status, error } = useSelector((state: RootState) => state.menu);
+
+  const [page, setPage] = useState(0);  
+
+  // 컴포넌트가 마운트될 때와 페이지가 변경될 때마다 API 요청
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 API 요청 보내기
-    dispatch(fetchRecipes());
-  }, [dispatch]);
+    dispatch(fetchRecipes({ page }));  
+  }, [dispatch, page]);
+
+  // 페이지 변경 함수
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  // API에서 받은 데이터가 객체일 때, content 배열만 추출
+  const recipeList = recipes.content || [];  
 
   return (
-    <div>
-      <h1>Recipe List</h1>
+    <div className="menu-container">
       {status === 'loading' && <p>Loading...</p>}
       {status === 'failed' && <p>Error: {error}</p>}
-      {status === 'succeeded' && Array.isArray(recipes) && recipes.length > 0 ? ( // 배열인지 확인하고 렌더링
-        <ul>
-          {recipes.map((recipe: any) => (
-            <li key={recipe.id}>{recipe.title}</li>
-          ))}
-        </ul>
+      {status === 'succeeded' && Array.isArray(recipeList) && recipeList.length > 0 ? ( 
+        <>
+          <ul className="menu-list">
+            {recipeList.map((recipe: Recipes) => (
+              <li className="menu-item" key={recipe.id}>
+                <img src={recipe.image_url} className='menu-image' alt={recipe.name} />
+                <h2>{recipe.name}</h2>
+              </li>
+            ))}
+          </ul>
+
+          <div className="pagination-container">
+          <div className="pagination">
+            {Array.from({ length: 8 }, (_, index) => (
+              <button
+                key={index}
+                onClick={() => setPage(index)}
+                disabled={page === index}  // 현재 페이지는 비활성화
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </div>
+        </>
       ) : (
-        <p>No recipes available</p> // 배열이 아니거나 빈 배열인 경우
+        status === 'succeeded' && <p>No recipes found</p>
       )}
     </div>
   );
 };
 
 export default RecipeList;
-

@@ -38,11 +38,11 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const fetchPlaceId = async (x: string, y: string, placeName: string) => {
   try {
     const params = {
-      location: `${y},${x}`,  // 위도와 경도
-      radius: 500,           // 검색 반경 (단위: 미터)
-      keyword: placeName,     // 음식점 이름
-      type: "restaurant",     // 음식점 타입
-      key: process.env.REACT_APP_GOOGLE_API_KEY,  // 구글 API 키
+      location: `${y},${x}`,  
+      radius: 500,           
+      keyword: placeName,    
+      type: "restaurant",    
+      key: process.env.REACT_APP_GOOGLE_API_KEY, 
     };
 
     const response = await axios.get('/api/google/maps/api/place/nearbysearch/json', { params });
@@ -60,8 +60,11 @@ const fetchPlaceId = async (x: string, y: string, placeName: string) => {
   }
 };
 
+
 // 구글 Places API로 이미지 URL 가져오기
 const fetchPlacePhoto = async (placeId: string) => {
+
+  /*다른 기능 중 요청을 하지 않게 하기 위해 주석 처리(후에 주석 제거해야 함.)
   try {
     const params = {
       place_id: placeId,
@@ -84,6 +87,7 @@ const fetchPlacePhoto = async (placeId: string) => {
     console.error("이미지를 가져오는 중 오류 발생:", error);
     return null;
   }
+    */
 };
 
 // 음식점 정보와 이미지 가져오기 (캐시 기능 및 딜레이 추가)
@@ -150,9 +154,6 @@ export const fetchRestaurants = createAsyncThunk(
   }
 );
 
-
-
-
 const restaurantSlice = createSlice({
   name: 'restaurants',
   initialState,
@@ -191,3 +192,4 @@ const restaurantSlice = createSlice({
 export const { nextSlide, prevSlide, setSlide } = restaurantSlice.actions;
 
 export default restaurantSlice.reducer;
+
