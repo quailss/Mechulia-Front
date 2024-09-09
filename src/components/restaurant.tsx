@@ -117,7 +117,8 @@ const LocationSelector: React.FC = () => {
               <button onClick={goToPrev} className="slider-button prev-button" disabled={currentIndex === 0}>{'←'}</button>
               <div
                 className="restaurant-content"
-                style={{ transform: `translateX(-${currentIndex * slideWidth}px)` }}
+                style={{ transform: `translateX(-${currentIndex * slideWidth}px)`,
+                justifyContent: restaurants.length - currentIndex <= 3 ? 'center' : 'flex-start', }}
               >
                 {restaurants.slice(currentIndex, currentIndex + 3).map((restaurant) => (
                   <div

@@ -10,7 +10,7 @@ interface Restaurant {
   place_url: string;
   x: string;
   y: string;
-  //네이버 api를 이용해 이미지 가져오기
+  //구글 api를 이용해 이미지 가져오기
   place_img?: string | null;
 }
 
@@ -28,56 +28,72 @@ const initialState: RestaurantState = {
   error: null,
 };
 
-// 이미지 캐시를 위한 Map (검색어를 키로, 이미지 URL을 값으로 저장)
-const imageCache = new Map<string, string>();
+// 이미지 URL 캐시를 위한 객체
+const imageCache: { [key: string]: string | null } = {};
 
-// 네이버 이미지 검색 api를 이용해 이미지 가져오기 (딜레이 및 캐싱 적용)
-async function fetchImageWithDelayAndCache(placeName: string, delay: number): Promise<string | null> {
-  // 캐시된 이미지가 있는 경우, 캐시에서 가져오기
-  if (imageCache.has(placeName)) {
-    return imageCache.get(placeName) || null;
-  }
+// 딜레이 함수 (200ms)
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  // 요청 간 딜레이를 추가 (밀리초 단위)
-  await new Promise(resolve => setTimeout(resolve, delay));
-
+// 구글 Places API로 place_id 가져오기
+const fetchPlaceId = async (x: string, y: string, placeName: string) => {
   try {
-    const response = await axios.get('/api/v1/search/image', {
-      params: {
-        query: placeName,
-        display: 1,
-      },
-      headers: {
-        'X-Naver-Client-ID': `${process.env.REACT_APP_NAVER_CLIENT_ID}`,
-        'X-Naver-Client-Secret': `${process.env.REACT_APP_NAVER_CLIENT_SECRET}`,
-      }
-    });
+    const params = {
+      location: `${y},${x}`,  // 위도와 경도
+      radius: 500,           // 검색 반경 (단위: 미터)
+      keyword: placeName,     // 음식점 이름
+      type: "restaurant",     // 음식점 타입
+      key: process.env.REACT_APP_GOOGLE_API_KEY,  // 구글 API 키
+    };
 
-    const items = response.data.items;
-    const imageUrl = items.length > 0 ? items[0].thumbnail : 'https://github.com/quailss/image-data/blob/main/noimage.png?raw=true';
+    const response = await axios.get('/api/google/maps/api/place/nearbysearch/json', { params });
+    const results = response.data.results;
 
-    // 캐시에 저장
-    if (imageUrl) {
-      imageCache.set(placeName, imageUrl);
+    if (results.length > 0) {
+      return results[0].place_id; 
+    } else {
+      console.log("검색 결과가 없습니다.");
+      return null;
     }
-
-    return imageUrl;
   } catch (error) {
-    console.error(`Failed to fetch image for ${placeName}`, error);
-    return 'https://github.com/quailss/image-data/blob/main/noimage.png?raw=true';
+    console.error("Place ID를 가져오는 중 오류 발생:", error);
+    return null;
   }
-}
+};
 
-// 카카오 API를 이용해 음식점 정보 가져오기
+// 구글 Places API로 이미지 URL 가져오기
+const fetchPlacePhoto = async (placeId: string) => {
+  try {
+    const params = {
+      place_id: placeId,
+      key: process.env.REACT_APP_GOOGLE_API_KEY,  // 구글 API 키
+    };
+
+    const response = await axios.get('/api/google/maps/api/place/details/json', { params });
+    const result = response.data.result;
+
+    if (result.photos && result.photos.length > 0) {
+      const photoReference = result.photos[0].photo_reference;
+      // 실제 사진 URL 생성
+      const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
+      return photoUrl;
+    } else {
+      console.log("사진이 없습니다.");
+      return null;
+    }
+  } catch (error) {
+    console.error("이미지를 가져오는 중 오류 발생:", error);
+    return null;
+  }
+};
+
+// 음식점 정보와 이미지 가져오기 (캐시 기능 및 딜레이 추가)
 export const fetchRestaurants = createAsyncThunk(
   'restaurants/fetchRestaurants',
   async ({ region, city, category }: { region: string; city: string; category?: string }) => {
     const query = `${region} ${city}`;
     const categoryQuery = category ? ` ${category}` : '';
 
-    console.log(`API 요청 URL: https://dapi.kakao.com/v2/local/search/keyword.json?query=${query}${categoryQuery}&category_group_code=FD6`);
-
-    // API 요청 시 사용할 파라미터 객체
+    // 카카오 API 요청
     const params: any = {
       query: query + categoryQuery,
       category_group_code: 'FD6',   // 음식점 카테고리
@@ -95,25 +111,45 @@ export const fetchRestaurants = createAsyncThunk(
 
     const restaurants = response.data.documents;
 
-    // 각 음식점에 대해 네이버 이미지 검색을 수행하고, place_img 필드를 추가 (딜레이 추가)
+    // 각 음식점에 대해 구글 API를 사용해 이미지 가져오기
     const restaurantsWithImages = await Promise.all(
-      restaurants.map(async (restaurant: Restaurant, index: number) => {
-        // 딜레이를 200ms씩 추가하여 요청 빈도를 조정
-        const delay = index * 200;
+      restaurants.map(async (restaurant: Restaurant) => {
+        const { x, y, place_name } = restaurant;
 
-        // 이미지 요청에 캐싱 및 딜레이 적용
-        const imageUrl = await fetchImageWithDelayAndCache(restaurant.place_name, delay);
+        // 이미지 캐시 확인
+        if (imageCache[place_name]) {
+          console.log(`캐시에서 이미지 가져오기: ${place_name}`);
+          return { ...restaurant, place_img: imageCache[place_name] };
+        }
 
-        return {
-          ...restaurant,
-          place_img: imageUrl,
-        };
+        // 구글 Places API로 place_id 가져오기
+        const placeId = await fetchPlaceId(x, y, place_name);
+        let imageUrl = null;
+
+        if (placeId) {
+          // 200ms 딜레이 추가
+          await delay(200);
+
+          // 구글 Places API로 이미지 URL 가져오기
+          imageUrl = await fetchPlacePhoto(placeId);
+        }
+
+        // 사진이 없을 경우 기본 이미지 사용
+        if (!imageUrl) {
+          imageUrl = "https://github.com/quailss/image-data/blob/main/noimage.png?raw=true";
+        }
+
+        // 캐시에 이미지 URL 저장
+        imageCache[place_name] = imageUrl;
+
+        return { ...restaurant, place_img: imageUrl };
       })
     );
 
     return restaurantsWithImages.slice(0, 24); // 최대 24개의 음식점 정보만 반환
   }
 );
+
 
 
 
