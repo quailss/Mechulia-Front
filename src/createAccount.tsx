@@ -2,12 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Navigation from "./components/nav";
 
 const Wrapper = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  position: relative;
 `;
 
 const CreateAccountForm = styled.form`
@@ -15,36 +14,74 @@ const CreateAccountForm = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  width: 400px;
-  height: 600px;
-  background-color: #f2f2f2;
-  border-radius: 20px;
-  position: fixed;
 `;
 
 const CreateAccountTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 15px;
-  width: 300px;
-  height: 50px;
-  background-color: rgb(38, 158, 38);
   margin-bottom: 20px;
 `;
 
-const CreatAccountInput = styled.input`
-  width: 250px;
-  height: 30px;
-  border-radius: 20px;
-  text-align: center;
-  border: none;
+const Email = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
 `;
 
-const CreateAccountBtn = styled.button`
-  width: 200px;
-  height: 50px;
-  border-radius: 15px;
+const Password = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const CheckPassword = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const UserName = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const PhoneNumber = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const Date = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+`;
+
+const CreatAccountInput = styled.input`
+  width: 600px;
+  height: 30px;
+  text-align: center;
+`;
+
+const CreateAccountOrOut = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const OutBtn = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 40px;
   border: none;
   font-family: "GangwonEdu_OTFBoldA";
   font-size: 15px;
@@ -52,18 +89,51 @@ const CreateAccountBtn = styled.button`
   &:active {
     filter: brightness(70%);
   }
-  background-color: rgb(38, 158, 38);
+  background-color: #ff8946;
 `;
 
-const LoginBtn = styled.span`
+const CreateAccountBtn = styled.button`
+  width: 150px;
+  height: 40px;
+  border: none;
+  font-family: "GangwonEdu_OTFBoldA";
+  font-size: 15px;
   cursor: pointer;
-  &:hover {
-    text-decoration-line: underline;
+  &:active {
+    filter: brightness(70%);
   }
+  background-color: #62a1ff;
+`;
+
+const Line = styled.div`
+  border-top: 1px solid;
+  width: 600px;
+  margin-top: 40px;
 `;
 
 const Errors = styled.span`
   color: Red;
+`;
+
+const KaKaoLogin = styled.div`
+  width: 300px;
+  height: 40px;
+  background-color: #ffd02c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 40px;
+`;
+
+const NaverLogin = styled.div`
+  width: 300px;
+  height: 40px;
+  background-color: #21d811;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
 `;
 
 interface FormProps {
@@ -75,6 +145,9 @@ interface FormProps {
 }
 
 const CreateAccount: React.FC = () => {
+  const onClick = () => {
+    nvigate("/");
+  };
   const nvigate = useNavigate();
   const {
     register,
@@ -87,51 +160,85 @@ const CreateAccount: React.FC = () => {
   };
   return (
     <Wrapper>
+      <Navigation />
       <CreateAccountForm onSubmit={handleSubmit(onValid)}>
         <CreateAccountTitle>회원가입</CreateAccountTitle>
-        <CreatAccountInput
-          type="email"
-          placeholder="이메일을 입력하세요."
-          {...register("email", { required: "이메일은 필수입니다." })}
-        />
-        <Errors>{errors.email?.message}</Errors>
-        <CreatAccountInput
-          type="password"
-          placeholder="비밀번호를 입력하세요."
-          {...register("password", {
-            required: "비밀번호는 필수입니다.",
-            minLength: {
-              value: 4,
-              message: "비밀번호가 짧습니다.",
-            },
-          })}
-        />
-        <Errors>{errors.password?.message}</Errors>
-        <CreatAccountInput
-          type="name"
-          placeholder="이름을 입력하세요."
-          {...register("name", {
-            required: "이름은 필수입니다.",
-            maxLength: 10,
-          })}
-        />
-        <Errors>{errors.name?.message}</Errors>
-        <CreatAccountInput
-          type="number"
-          placeholder="전화번호를 입력하세요."
-          {...register("number", { required: "전화번호는 필수입니다." })}
-        />
-        <Errors>{errors.number?.message}</Errors>
-        <CreatAccountInput
-          type="date"
-          placeholder="생년월일을 입력하세요."
-          {...register("date", { required: "생년월일은 필수입니다." })}
-        />
-        <Errors>{errors.date?.message}</Errors>
-        <CreateAccountBtn>가입</CreateAccountBtn>
-        <LoginBtn onClick={() => nvigate("/login")}>
-          이미 계정이 있으신가요?
-        </LoginBtn>
+        <Email>
+          <span>이메일</span>
+          <CreatAccountInput
+            type="email"
+            placeholder="이메일을 입력하세요."
+            {...register("email", { required: "이메일은 필수입니다." })}
+          />
+          <Errors>{errors.email?.message}</Errors>
+        </Email>
+        <Password>
+          <span>비밀번호</span>
+          <CreatAccountInput
+            type="password"
+            placeholder="비밀번호를 입력하세요."
+            {...register("password", {
+              required: "비밀번호는 필수입니다.",
+              minLength: {
+                value: 4,
+                message: "비밀번호가 짧습니다.",
+              },
+            })}
+          />
+          <Errors>{errors.password?.message}</Errors>
+        </Password>
+        <CheckPassword>
+          <span>비밀번호 확인</span>
+          <CreatAccountInput
+            type="password"
+            placeholder="비밀번호를 입력하세요."
+            {...register("password", {
+              required: "비밀번호는 필수입니다.",
+              minLength: {
+                value: 4,
+                message: "비밀번호가 짧습니다.",
+              },
+            })}
+          />
+          <Errors>{errors.password?.message}</Errors>
+        </CheckPassword>
+        <UserName>
+          <span>이름</span>
+          <CreatAccountInput
+            type="name"
+            placeholder="이름을 입력하세요."
+            {...register("name", {
+              required: "이름은 필수입니다.",
+              maxLength: 10,
+            })}
+          />
+          <Errors>{errors.name?.message}</Errors>
+        </UserName>
+        <PhoneNumber>
+          <span>전화번호</span>
+          <CreatAccountInput
+            type="number"
+            placeholder="전화번호를 입력하세요."
+            {...register("number", { required: "전화번호는 필수입니다." })}
+          />
+          <Errors>{errors.number?.message}</Errors>
+        </PhoneNumber>
+        <Date>
+          <span>생년월일</span>
+          <CreatAccountInput
+            type="date"
+            placeholder="생년월일을 입력하세요."
+            {...register("date", { required: "생년월일은 필수입니다." })}
+          />
+          <Errors>{errors.date?.message}</Errors>
+        </Date>
+        <CreateAccountOrOut>
+          <OutBtn onClick={onClick}>취소</OutBtn>
+          <CreateAccountBtn>가입</CreateAccountBtn>
+        </CreateAccountOrOut>
+        <Line />
+        <KaKaoLogin>카카오 로그인</KaKaoLogin>
+        <NaverLogin>네이버 로그인</NaverLogin>
       </CreateAccountForm>
     </Wrapper>
   );
