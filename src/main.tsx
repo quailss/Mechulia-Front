@@ -8,7 +8,6 @@ import Banner from "./components/banner";
 import ThemeSlider from "./components/themeSlider";
 import Restaurant from "./components/restaurant";
 import MenuList from "./components/menuList";
-import SocialLogin from "./components/socialLogin";
 import "./styles/main.css";
 
 const Main: React.FC = () => {
@@ -28,7 +27,6 @@ const Main: React.FC = () => {
       <div className="menu-container">
         <MenuList />
       </div>
-      <SocialLogin />
     </Provider>
   );
 };
