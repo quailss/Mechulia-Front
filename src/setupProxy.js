@@ -25,6 +25,20 @@ module.exports = function(app) {
       },
     })
   );
+
+  app.use(
+    '/oauth2',
+    createProxyMiddleware({
+      target: 'http://localhost:8080',
+      changeOrigin: true,
+      secure: false,
+      // CORS 요청에 대한 설정
+      onProxyRes: function (proxyRes, req, res) {
+        proxyRes.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+        proxyRes.headers['Access-Control-Allow-Credentials'] = 'true';
+      },
+    })
+  );
   
 };
 

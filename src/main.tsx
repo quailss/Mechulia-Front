@@ -8,6 +8,7 @@ import Banner from "./components/banner";
 import ThemeSlider from "./components/themeSlider";
 import Restaurant from "./components/restaurant";
 import MenuList from "./components/menuList";
+import SocialLogin from "./components/socialLogin";
 import "./styles/main.css";
 
 const Main: React.FC = () => {
@@ -24,7 +25,10 @@ const Main: React.FC = () => {
         <Restaurant />
       </div>
       <h2 className="recipe">메뉴 추천</h2>
-      <MenuList />
+      <div className="menu-container">
+        <MenuList />
+      </div>
+      <SocialLogin />
     </Provider>
   );
 };
