@@ -15,7 +15,8 @@ interface Recipes {
 
 interface RecipesState {
   recipes: { content: Recipes[] };  
-  selectedRecipe: Recipes | null;   
+  selectedRecipe: Recipes | null;  
+  totalElements: number, 
   currentIndex: number;            
   status: 'idle' | 'loading' | 'succeeded' | 'failed';  
   error: string | null;            
@@ -25,6 +26,7 @@ interface RecipesState {
 const initialState: RecipesState = {
   recipes: { content: [] },  // content 배열을 포함한 객체로 초기화
   selectedRecipe: null,
+  totalElements: 0,
   currentIndex: 0,
   status: 'idle',
   error: null,
@@ -35,27 +37,29 @@ export const fetchRecipes = createAsyncThunk(
   'recipes/fetchRecipes',
   async ({ page }: { page: number }) => {
     try {
-      // URL 생성
       const url = `http://localhost:8080/api/recipe/main?page=${page}&size=15`;
 
-      // URL을 콘솔에 출력하여 확인
       console.log("Request URL:", url);
 
       const response = await axios.get(url);
-      
-      // 응답 상태 코드 확인
+
       if (response.status !== 200) {
         throw new Error(`Unexpected status code: ${response.status}`);
       }
 
-      // API 응답에서 content 배열만 추출하여 반환
-      return response.data;
+      console.log("data: ", response.data);
+
+      // 필요한 경우 응답 데이터의 구조에 따라 content 배열만 반환하도록 수정
+      const { recipes, totalElements } = response.data; 
+
+      return { recipes, totalElements }; // 컴포넌트에서 활용할 수 있도록 반환
     } catch (error: any) {
       console.error('Error fetching recipes:', error.message || error);
       throw new Error(error.response?.data || 'Failed to fetch recipes');
     }
   }
 );
+
 
 
 
@@ -72,7 +76,9 @@ const recipeSlice = createSlice({
       })
       .addCase(fetchRecipes.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.recipes = action.payload;  
+        // action.payload에서 recipes와 totalElements를 추출하여 state에 저장
+        state.recipes.content = action.payload.recipes;  
+        state.totalElements = action.payload.totalElements;  // 전체 요소 수 저장
         state.error = null;  
       })
       .addCase(fetchRecipes.rejected, (state, action) => {
@@ -81,6 +87,7 @@ const recipeSlice = createSlice({
       });
   },
 });
+
 
 
 // 리듀서 기본 내보내기
