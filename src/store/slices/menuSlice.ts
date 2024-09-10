@@ -19,7 +19,8 @@ interface RecipesState {
   totalElements: number, 
   currentIndex: number;            
   status: 'idle' | 'loading' | 'succeeded' | 'failed';  
-  error: string | null;            
+  error: string | null; 
+  menuId?: number;           
 }
 
 // 초기 상태 정의
@@ -30,18 +31,22 @@ const initialState: RecipesState = {
   currentIndex: 0,
   status: 'idle',
   error: null,
+  menuId: undefined,
 };
 
 // 비동기 API 요청을 위한 thunk 생성
 export const fetchRecipes = createAsyncThunk(
   'recipes/fetchRecipes',
-  async ({ page }: { page: number }) => {
+  async ({ page, menu_id }: { page: number; menu_id?: number }) => {
     try {
-      const url = `http://localhost:8080/api/recipe/main?page=${page}&size=15`;
-
-      console.log("Request URL:", url);
+      // menu_id가 존재하면 URL에 포함, 없으면 제외
+      const url = menu_id 
+        ? `http://localhost:8080/api/recipe/category/${menu_id}?page=${page}&size=15`
+        : `http://localhost:8080/api/recipe/main?page=${page}&size=15`;
 
       const response = await axios.get(url);
+
+      console.log("Request URL:", url);
 
       if (response.status !== 200) {
         throw new Error(`Unexpected status code: ${response.status}`);
@@ -49,10 +54,9 @@ export const fetchRecipes = createAsyncThunk(
 
       console.log("data: ", response.data);
 
-      // 필요한 경우 응답 데이터의 구조에 따라 content 배열만 반환하도록 수정
       const { recipes, totalElements } = response.data; 
 
-      return { recipes, totalElements }; // 컴포넌트에서 활용할 수 있도록 반환
+      return { recipes, totalElements };
     } catch (error: any) {
       console.error('Error fetching recipes:', error.message || error);
       throw new Error(error.response?.data || 'Failed to fetch recipes');
@@ -61,13 +65,15 @@ export const fetchRecipes = createAsyncThunk(
 );
 
 
-
-
 // recipeSlice 생성
 const recipeSlice = createSlice({
   name: 'recipes',
   initialState,  // 초기 상태를 정의
-  reducers: {},
+  reducers: {
+    setMenuId(state, action: PayloadAction<number | undefined>) {
+      state.menuId = action.payload;  // menuId 상태 업데이트
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRecipes.pending, (state) => {
@@ -91,5 +97,6 @@ const recipeSlice = createSlice({
 
 
 // 리듀서 기본 내보내기
+export const { setMenuId } = recipeSlice.actions; 
 export default recipeSlice.reducer;
 

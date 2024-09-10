@@ -19,19 +19,31 @@ const RecipeList = () => {
   // useDispatch를 사용하되, AppDispatch로 타입 지정
   const dispatch: AppDispatch = useDispatch();
 
-  // useSelector를 사용하되, RootState로 타입 지정
-  const { recipes, status, error, totalElements } = useSelector((state: RootState) => state.menu);
+  // Redux에서 menuId와 recipes 관련 상태 가져오기
+  const { recipes, status, error, totalElements, menuId } = useSelector((state: RootState) => state.menu);
 
-  const [page, setPage] = useState(0);  
+  const [page, setPage] = useState(0);
 
-  // 컴포넌트가 마운트될 때와 페이지가 변경될 때마다 API 요청
+  // 페이지 또는 menuId가 변경될 때마다 API 요청
   useEffect(() => {
-    dispatch(fetchRecipes({ page }));  
-  }, [dispatch, page]);
+    console.log("Current menuId:", menuId);
+    // 카테고리가 선택된 상태이면 카테고리별 API 요청, 그렇지 않으면 기본 API 요청
+    if (menuId !== undefined) {
+      dispatch(fetchRecipes({ page, menu_id: menuId })); // 카테고리별 API 요청
+    } else {
+      dispatch(fetchRecipes({ page })); // 기본 API 요청
+    }
+
+    // 디버깅용 URL 콘솔 출력
+    const url = menuId !== undefined
+      ? `http://localhost:8080/api/recipe/category/${menuId}?page=${page}&size=15`
+      : `http://localhost:8080/api/recipe/main?page=${page}&size=15`;
+    console.log("Request URL:", url);
+  }, [dispatch, page, menuId]);
 
   // 페이지 변경 함수
   const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+    setPage(newPage); // 페이지 상태 업데이트
   };
 
   return (
@@ -55,8 +67,9 @@ const RecipeList = () => {
               {Array.from({ length: Math.ceil(totalElements / 15) }, (_, index) => (
                 <button
                   key={index}
-                  onClick={() => setPage(index)}
+                  onClick={() => handlePageChange(index)} // 페이지 변경 함수 호출
                   disabled={page === index}  // 현재 페이지는 비활성화
+                  className={page === index ? "active-page" : ""} // 현재 페이지 스타일 적용
                 >
                   {index + 1}
                 </button>

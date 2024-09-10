@@ -122,7 +122,6 @@ export const fetchRestaurants = createAsyncThunk(
 
         // 이미지 캐시 확인
         if (imageCache[place_name]) {
-          console.log(`캐시에서 이미지 가져오기: ${place_name}`);
           return { ...restaurant, place_img: imageCache[place_name] };
         }
 

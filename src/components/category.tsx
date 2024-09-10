@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { RootState, AppDispatch } from "../store/store";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import "../styles/category.css";
-import { fetchRestaurants } from "../store/slices/restaurantSlice";
+import { fetchRecipes, setMenuId } from "../store/slices/menuSlice";
 import { setCategory  } from "../store/slices/categorySlice";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -11,14 +11,28 @@ const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 const Category: React.FC = () => {
     //선택 옵션
     const options = ["한식", "중식", "일식", "양식", "그 외",];
+    //옵션 값
+    const categoryToMenuId: { [key: string]: number } = {
+        "한식": 1,
+        "중식": 3,
+        "일식": 4,
+        "양식": 2,
+        "그 외": 5,
+      };
+
     const [selected, setSelected] = useState<string | undefined>();
 
     const dispatch = useAppDispatch();
 
     const handleSelect = (option: string) => {
         setSelected(option);
-        dispatch(setCategory(option)); 
-        console.log(`선택된 카테고리: ${option}`);
+        const selectedMenuId = categoryToMenuId[option];
+        
+        //선택한 메뉴 id redux에 저장
+        dispatch(setMenuId(selectedMenuId));
+        dispatch(fetchRecipes({ page: 0, menu_id: selectedMenuId }));
+        dispatch(setCategory(option));
+        console.log(`선택된 카테고리: ${option}, menuId: ${selectedMenuId}`);
       };
 
     return (
