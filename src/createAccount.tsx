@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Navigation from "./components/nav";
+import axios from "axios";
+import { KAKAO_AUTH_URL, NAVER_AUTH_URL } from "./oauth";
 
 const Wrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
 `;
 
@@ -23,51 +26,70 @@ const CreateAccountTitle = styled.div`
   margin-bottom: 20px;
 `;
 
-const Email = styled.div`
+const InfoTitle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  width: 640px;
+`;
+
+const InfoFirstTitle = styled.span`
+  font-size: 20px;
+`;
+
+const InfoSecondTitle = styled.span`
+  color: #6666;
+  font-size: 14px;
+`;
+
+const Email = styled.div`
+  width: 640px;
+  display: grid;
+  grid-template-columns: 1fr 376px 1fr;
   margin-top: 20px;
 `;
 
-const Password = styled.div`
+const CheckEmail = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: #42c6ff;
+  width: 112px;
+`;
+
+const Password = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-top: 20px;
 `;
 
 const CheckPassword = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-top: 20px;
 `;
 
 const UserName = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-top: 20px;
 `;
 
 const PhoneNumber = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-top: 20px;
 `;
 
 const Date = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-top: 20px;
 `;
 
 const CreatAccountInput = styled.input`
-  width: 600px;
-  height: 30px;
+  height: 40px;
   text-align: center;
 `;
 
@@ -124,6 +146,9 @@ const KaKaoLogin = styled.div`
   justify-content: center;
   margin-bottom: 20px;
   margin-top: 40px;
+  &:active {
+    filter: brightness(70%);
+  }
 `;
 
 const NaverLogin = styled.div`
@@ -134,6 +159,9 @@ const NaverLogin = styled.div`
   align-items: center;
   justify-content: center;
   margin-bottom: 20px;
+  &:active {
+    filter: brightness(70%);
+  }
 `;
 
 interface FormProps {
@@ -145,33 +173,79 @@ interface FormProps {
 }
 
 const CreateAccount: React.FC = () => {
-  const onClick = () => {
-    nvigate("/");
+  const [check, setCheck] = useState("");
+  const [error, setError] = useState("");
+  const checkEmails = async () => {
+    try {
+      const response = await axios.post("http://localhost:8080/auth/register");
+      const Emails: string[] = await response.data;
+      if (Emails.includes(check)) {
+        setError("중복된 이메일이 있습니다.");
+      } else {
+        setError("");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const nvigate = useNavigate();
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCheck(e.currentTarget.value);
+  };
+
+  const onClick = () => {
+    navigate("/");
+  };
+
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormProps>();
-  const onValid = () => {
-    alert("가입되었습니다.");
-    nvigate("/login");
+  const onValid = async ({
+    email,
+    password,
+    name,
+    number,
+    date,
+  }: FormProps) => {
+    try {
+      await axios.post("http://localhost:8080/auth/register", {
+        email,
+        password,
+        name,
+        number,
+        date,
+      });
+      alert("가입되었습니다.");
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <Wrapper>
       <Navigation />
+      <CreateAccountTitle>회원가입</CreateAccountTitle>
+      <InfoTitle>
+        <InfoFirstTitle>필수입력 정보</InfoFirstTitle>
+        <InfoSecondTitle>필수항목이므로 반드시 입력해주세요.</InfoSecondTitle>
+      </InfoTitle>
       <CreateAccountForm onSubmit={handleSubmit(onValid)}>
-        <CreateAccountTitle>회원가입</CreateAccountTitle>
         <Email>
           <span>이메일</span>
           <CreatAccountInput
             type="email"
             placeholder="이메일을 입력하세요."
-            {...register("email", { required: "이메일은 필수입니다." })}
+            {...register("email", {
+              required: "이메일은 필수입니다.",
+              onChange: onChange,
+            })}
           />
-          <Errors>{errors.email?.message}</Errors>
+          <CheckEmail onClick={() => checkEmails}>중복 확인</CheckEmail>
         </Email>
+        <Errors>{errors.email?.message}</Errors>
+        <Errors>{error}</Errors>
         <Password>
           <span>비밀번호</span>
           <CreatAccountInput
@@ -237,8 +311,12 @@ const CreateAccount: React.FC = () => {
           <CreateAccountBtn>가입</CreateAccountBtn>
         </CreateAccountOrOut>
         <Line />
-        <KaKaoLogin>카카오 로그인</KaKaoLogin>
-        <NaverLogin>네이버 로그인</NaverLogin>
+        <a href={KAKAO_AUTH_URL}>
+          <KaKaoLogin>카카오 로그인</KaKaoLogin>
+        </a>
+        <a href={NAVER_AUTH_URL}>
+          <NaverLogin>네이버 로그인 </NaverLogin>
+        </a>
       </CreateAccountForm>
     </Wrapper>
   );
