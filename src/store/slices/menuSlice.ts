@@ -56,14 +56,13 @@ export const fetchRecipes = createAsyncThunk(
 
       const { recipes, totalElements } = response.data; 
 
-      return { recipes, totalElements };
+      return { recipes, totalElements, menuId:menu_id };
     } catch (error: any) {
       console.error('Error fetching recipes:', error.message || error);
       throw new Error(error.response?.data || 'Failed to fetch recipes');
     }
   }
 );
-
 
 // recipeSlice 생성
 const recipeSlice = createSlice({
@@ -81,11 +80,14 @@ const recipeSlice = createSlice({
         state.error = null; 
       })
       .addCase(fetchRecipes.fulfilled, (state, action) => {
+
+
+        // 상태 업데이트
         state.status = 'succeeded';
-        // action.payload에서 recipes와 totalElements를 추출하여 state에 저장
-        state.recipes.content = action.payload.recipes;  
-        state.totalElements = action.payload.totalElements;  // 전체 요소 수 저장
-        state.error = null;  
+        state.recipes.content = [...action.payload.recipes]; // 배열 복사
+        state.totalElements = action.payload.totalElements;
+        state.menuId = action.payload.menuId;
+        state.error = null;
       })
       .addCase(fetchRecipes.rejected, (state, action) => {
         state.status = 'failed';
@@ -93,8 +95,6 @@ const recipeSlice = createSlice({
       });
   },
 });
-
-
 
 // 리듀서 기본 내보내기
 export const { setMenuId } = recipeSlice.actions; 

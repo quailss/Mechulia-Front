@@ -56,20 +56,19 @@ const RecipeList = () => {
             {recipes.content.map((recipe: Recipes) => (
               <li className="menu-item" key={recipe.id}>
                 <img src={recipe.image_url} className='menu-image' alt={recipe.name} />
-                <h2>{recipe.name}</h2>
+                <h2 className='recipe-name'>{recipe.name}</h2>
               </li>
             ))}
           </ul>
 
           <div className="pagination-container">
             <div className="pagination">
-              {/* totalElements를 15로 나눈 뒤, 나머지가 있으면 +1을 해줍니다. */}
               {Array.from({ length: Math.ceil(totalElements / 15) }, (_, index) => (
                 <button
                   key={index}
-                  onClick={() => handlePageChange(index)} // 페이지 변경 함수 호출
-                  disabled={page === index}  // 현재 페이지는 비활성화
-                  className={page === index ? "active-page" : ""} // 현재 페이지 스타일 적용
+                  onClick={() => handlePageChange(index)} 
+                  disabled={page === index}  
+                  className={page === index ? "active-page" : ""} 
                 >
                   {index + 1}
                 </button>

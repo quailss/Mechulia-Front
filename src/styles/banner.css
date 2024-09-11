@@ -5,20 +5,11 @@
     font-style: normal;
 }
 
-html, body {
-    width: 100vw;
-    min-width: 1024px;
-    overflow-x: auto;
-    font-family: 'GangwonEdu_OTFBoldA';
-}
-
 .banner-container {
     position: relative;
-    height: 350px;
-    width: 60vw;
-    min-width: 1024px;
-    max-width: 100%;
-    background-color: lightgray;
+    width: 1280px;
+    height: 500px;
+    background-color: white;
     top: 20px;
     display: flex;
     justify-content: center;
@@ -26,3 +17,64 @@ html, body {
     white-space: nowrap;
     padding: 15px;
 }
+
+.banner-image {
+    width: 1280px;
+    height: 500px;
+    border-radius: 12px;
+    filter: brightness(0.7);
+    z-index: 500;
+}
+
+.inner-item{
+    position: absolute;
+    width: 1080px;
+    top: 290px;
+    text-align: right;
+    right: 60px;
+}
+
+.banner-name {
+    font-family: 'Pretendard';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 50px;
+    z-index: 600;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.banner-recipe {
+    align-items: center;
+    padding: 17px 22px;
+    border-radius: 100px;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-weight: 600;
+    color: #FFFFFF;
+    background: #444444;
+    border: 2px solid #6A6A6A;
+    text-decoration: none;
+    font-style: normal;
+}
+
+.banner-counter-container{
+    margin-right: 15px;
+    right: 20px;
+}
+
+.banner-counter{
+    font-size: 35px;
+    color: #c0c0c0;
+    align-items: center;
+    display: inline-flex; 
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.banner-counter-number {
+    font-size: 45px;
+    font-weight: bold;
+    color: white;
+}
+

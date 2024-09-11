@@ -64,26 +64,42 @@ const ThemeSlider: React.FC = () => {
 
     return (
         <div className="slider-wrapper">
-            <button onClick={goToPrev} className="slider-btn prev-btn">
-                {"←"}
-            </button>
-            <div className="theme-slider-container" ref={slideContainerRef}>
-                <div
-                    className="slide-content"
-                    style={{ transform: `translateX(-${currentIndex * (slideWidth + 30)}px)` }} 
-                >
-                    {slides.map((slide, index) => (
-                        <div key={index} className="slide" style={{ minWidth: `${slideWidth}px`, height: "200px" }}>
-                            <img src={slide.src} alt={`slide-${index}`} style={{ width: "100%", height: "auto" }} />
-                            <div className="slide-text">{slide.text}</div>
-                        </div>
-                    ))}
+        <div className="theme-slider-container">
+            {/* 윗 줄 (첫 번째 4개 슬라이드) */}
+            <div className="slide-content">
+            {slides.slice(0, 4).map((slide, index) => (
+                <div key={index} className="slide">
+                <div className="slide-box">
+                    <div className="slide-image-container">
+                    <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
+                    </div>
+                    <div className="slide-text-box">
+                        <h2 className="slide-text">{slide.text}</h2>
+                    </div>
                 </div>
+                </div>
+            ))}
             </div>
-            <button onClick={goToNext} className="slider-btn next-btn">
-                {"→"}
-            </button>
+
+            {/* 밑 줄 (나머지 4개 슬라이드) */}
+            <div className="slide-content">
+            {slides.slice(4).map((slide, index) => (
+                <div key={index} className="slide">
+                <div className="slide-box">
+                    <div className="slide-image-container">
+                    <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
+                    </div>
+                    <div className="slide-text-box">
+                        <h2 className="slide-text">{slide.text}</h2>
+                    </div>
+                </div>
+                </div>
+            ))}
+            </div>
         </div>
+        </div>
+
+
     );
 };
 

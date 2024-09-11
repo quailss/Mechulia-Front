@@ -37,7 +37,7 @@ const LocationSelector: React.FC = () => {
         const updateSlideWidth = () => {
             if (slideContainerRef.current) {
                 const containerWidth = slideContainerRef.current.clientWidth;
-                const calculatedSlideWidth = (containerWidth - 60) / 3;
+                const calculatedSlideWidth = (containerWidth - 60) / 4;
                 setSlideWidth(calculatedSlideWidth);
             }
         };
@@ -83,7 +83,6 @@ const LocationSelector: React.FC = () => {
         <div>
           <div className="location-container">
             <div className="location-dropdown">
-              <label>시/도:</label>
               <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
                 <option value="">선택하세요</option>
                 {Object.keys(locations).map((province) => (
@@ -94,7 +93,6 @@ const LocationSelector: React.FC = () => {
               </select>
             </div>
             <div className="location-dropdown">
-              <label>시/군/구:</label>
               <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
@@ -114,13 +112,17 @@ const LocationSelector: React.FC = () => {
           {status === 'failed' && <p>Failed to load restaurants.</p>}
           {status === 'succeeded' && restaurants.length > 0 && (
             <div className="restaurant-container margin-top" ref={slideContainerRef}>
-              <button onClick={goToPrev} className="slider-button prev-button" disabled={currentIndex === 0}>{'←'}</button>
+                  <button
+                    onClick={goToPrev}
+                    className="slider-button prev-button"
+                    style={{ visibility: currentIndex === 0 ? 'hidden' : 'visible' }}
+                  >{'←'}</button>
               <div
                 className="restaurant-content"
                 style={{ transform: `translateX(-${currentIndex * slideWidth}px)`,
-                justifyContent: restaurants.length - currentIndex <= 3 ? 'center' : 'flex-start', }}
+                justifyContent: restaurants.length - currentIndex <= 4 ? 'center' : 'flex-start', }}
               >
-                {restaurants.slice(currentIndex, currentIndex + 3).map((restaurant) => (
+                {restaurants.slice(currentIndex, currentIndex + 4).map((restaurant) => (
                   <div
                     key={restaurant.id}
                     className="restaurant-card"
@@ -131,7 +133,11 @@ const LocationSelector: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <button onClick={goToNext} className="slider-button next-button" disabled={currentIndex >= restaurants.length - 3}>{'→'}</button>
+              <button
+                onClick={goToNext}
+                className="slider-button next-button"
+                style={{ visibility: currentIndex >= restaurants.length - 4 ? 'hidden' : 'visible' }}
+              >{'→'}</button>
             </div>
           )}
         </div>

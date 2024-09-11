@@ -6,16 +6,40 @@
 }
 
 html, body {
-    width: 100vw;
-    min-width: 1024px;
-    overflow-x: auto;
+    position: relative;
+    width: 1280px;
+    background: #FFFFFF;
     font-family: 'GangwonEdu_OTFBoldA';
-    padding-top: 180px;
+    padding-top: 60px;
+    align-items: center;
+    left: calc(50% - 1280px/2);
+    flex-direction: column;
+}
+
+.category{
+    position: relative;
+    width: 100%;
+    top: 10px;
+}
+
+.searchbar{
+    position: relative;
+    top: 30px;
+}
+
+.banner{
+    position: relative;
+    top: 30px;
+}
+
+
+.theme-container{
+    margin-top: 280px;
 }
 
 .recommendation-theme{
     position: relative;
-    width: 60vw;
+    width: 1280px;
     min-width: 1024px;
     max-width: 100%;
     white-space: nowrap;
@@ -24,12 +48,11 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 80px;
 }
 
 .nearby-restaurant{
     position: relative;
-    width: 60vw;
+    width: 1280px;
     min-width: 1024px;
     max-width: 100%;
     white-space: nowrap;
@@ -38,12 +61,12 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 140px;
+    top: 150px;
 }
 
 .recipe{
     position: relative;
-    width: 60vw;
+    width: 1280px;
     min-width: 1024px;
     max-width: 100%;
     white-space: nowrap;
@@ -52,12 +75,12 @@ html, body {
     justify-content: left;
     margin: 0 auto;
     font-size: 30px;
-    top: 280px;
+    top: 50px;
 }
 
 .restaurant-container{
     position: relative;
-    width: 60vw;
+    width: 1280px;
     min-width: 1024px;
     max-width: 100%;
     display: flex;
@@ -68,11 +91,15 @@ html, body {
 
 .menu-container{
     position: relative;
-    width: 60vw;
+    width: 1280px;
     min-width: 1024px;
     max-width: 100%;
     display: flex;
     justify-content: left;
     margin: 0 auto;
-    top: 150px;
+    top: 20px;
+}
+
+.footer{
+    height: 200px;
 }

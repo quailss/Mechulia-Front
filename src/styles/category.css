@@ -5,44 +5,32 @@
     font-style: normal;
 }
 
-html, body {
-    width: 100vw;
-    min-width: 1024px;
-    overflow-x: auto;
-    font-family: 'GangwonEdu_OTFBoldA';
-}
-
 .category-container{
     position: relative;
-    width: 60vw;
-    min-width: 1024px;
-    max-width: 100%;
+    width: 100%;
     white-space: nowrap;
-    padding: 15px;
-    background-color: rgb(38, 158, 38);
+    background-color: white;
     display: flex;
-    justify-content: center;
-    margin: 0 auto;
+    justify-content: space-between;
+    height: 80px;
+    align-items: center;
 }
 
 .category-item{
-    display: inline-block;
-    padding: 10px 50px;
+    padding: 10px 70px;
     cursor: pointer;
     font-size: 20px;
-    border-right: 1px solid black;
+    border-bottom: 1px solid rgb(104, 104, 104);
 }
+
 .category-item:last-child{
-    border-right: none;
+    margin-right: 0px;
 }
 
 .category-item:hover{
-    text-decoration: underline 2px black;
+    border-bottom: 3px solid black;
 }
 
-.category-item.selected span {
-    color: white;
-    background-color: green;
-    border-radius: 15px;
-    padding: 20px 30px;
+.category-item.selected{
+    border-bottom: 3px solid black !important;
 }
