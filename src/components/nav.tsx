@@ -19,7 +19,7 @@ const Navigation = () => {
                 </div>
             ) : (
                 <div>
-                    <Link to="/" className="login">로그인</Link>
+                    <Link to="/login" className="login">로그인</Link>
                     <Link to="/" className="membership">회원가입</Link>
                 </div>
             )}
