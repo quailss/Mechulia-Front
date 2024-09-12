@@ -82,13 +82,20 @@
     border-radius: 5px;
 }
 
-.conditional, .warning{
+.conditional{
     margin-left: 150px;
     margin-top: 0px;
 }
 
 .warning{
+    margin-left: 150px;
+    margin-top: 0px;
     color: #F43F3F;
+}
+
+.error-text{
+    margin-left: 150px;
+    margin-top: 0px;
 }
 
 .input-year, .input-month, .input-day {
@@ -105,12 +112,23 @@
     margin-top: 30px;
 }
 
-.register-btn{
+.register-btn:disabled{
     width: 650px;
     height: 48px;
     background-color: #EBEBEB;
     border-radius: 5px;
     border: 1px solid #ccc;
     color: #999999;
+    margin-bottom: 100px;
+}
+
+.register-btn{
+    background-color: #2D2D2D; 
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    width: 650px;
+    height: 48px;
+    border-radius: 5px;
     margin-bottom: 100px;
 }
