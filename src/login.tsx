@@ -1,10 +1,10 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./styles/login.css";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import NaverLogin from "./images/naverLogin.png";
 import KakaoLogin from "./images/kakaoLogin.png";
 import { Link } from "react-router-dom";
-
+import axios from 'axios';
 
 const Login: React.FC = () => {
 
@@ -24,6 +24,7 @@ const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoginFormValid, setIsLoginFormValid] = useState(false);
 
     // 입력 필드의 값이 변경될 때 호출되는 함수
     const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +41,38 @@ const Login: React.FC = () => {
     };
 
     const isFormValid = username.length > 0 && password.length > 0;
+
+    // 로그인 버튼 유효성 검사
+    useEffect(() => {
+        const isValid = username.trim() !== '' && password.trim() !== '';
+        setIsLoginFormValid(isValid);
+    }, [username, password]);
+
+
+    // 로그인 처리
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const loginData = {
+            email: username,
+            password: password
+        };
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/auth/login', loginData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                alert('로그인 성공!');
+                window.location.href = '/'; // 메인 페이지로 이동
+            }
+        } catch (error) {
+            console.error('로그인 중 오류 발생:', error);
+        }
+    };
 
     return(
         <div className="page-container">
@@ -64,7 +97,7 @@ const Login: React.FC = () => {
                         style={{
                             position: 'absolute',
                             right: '10px',
-                            top: '50%',
+                            top: '55%',
                             transform: 'translateY(-50%)',
                             cursor: 'pointer',
                         }}
@@ -72,7 +105,7 @@ const Login: React.FC = () => {
                         {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
                     </div>
-                    <button className={`login-button ${isFormValid ? 'active' : ''}`} disabled={!isFormValid}>로그인</button>
+                    <button className={`login-button ${isFormValid ? 'active' : ''}`} disabled={!isFormValid} onClick={handleLogin}>로그인</button>
                 </div>
                 <div className="management-container">
                     <Link to="/createAccount" className="register">회원가입</Link>
