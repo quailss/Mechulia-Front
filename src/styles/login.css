@@ -61,18 +61,20 @@
     align-items: center;
     text-align: center;
     margin-top: 20px;
+    display: inline-block !important;
 }
 
 .register, .find {
+    display: inline-block !important;
     font-weight: 400;
     font-size: 16px;
     color: #555555;
     text-decoration: none;
-    padding: 5px 15px;
+    padding: 0px 15px;
 }
 
 .register {
-    border-right: 1px solid #555555;
+    border-right: 1px solid #555555 !important;
 }
 
 .division {

@@ -75,7 +75,7 @@ const Login: React.FC = () => {
                     <button className={`login-button ${isFormValid ? 'active' : ''}`} disabled={!isFormValid}>로그인</button>
                 </div>
                 <div className="management-container">
-                    <Link to="#" className="register">회원가입</Link>
+                    <Link to="/createAccount" className="register">회원가입</Link>
                     <Link to="#" className="find">ID/PW 찾기</Link>
                 </div>
                 <div className="division">

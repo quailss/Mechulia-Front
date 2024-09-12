@@ -1,0 +1,116 @@
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.management-container {
+
+    height: auto;
+}
+
+.register-title{
+    display: flex;
+    font-size: 36px;
+    justify-content: center;
+}
+
+.information {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 0px;
+}
+
+.precautions{
+    display: flex;
+    justify-content: flex-start;
+    color: #666666;
+    margin-bottom: 30px;
+}
+
+.divider{
+    margin-bottom: 30px;
+    border: 1px solid #404040;
+}
+
+.inner-container{
+    text-align: left;
+}
+
+.email-check{
+    background-color: white;
+    color: #999999;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 102px;
+    height: 35px;
+    margin-left: 20px;
+    cursor: not-allowed;
+}
+
+.email-check.active {
+    background-color: #2D2D2D;
+    color: white;
+    cursor: pointer;
+}
+
+.email, .name, .password, .check-password, .phonenumber, .birth{
+    font-size: 24px;
+    width: 150px;
+    display: inline-block;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.birthyear, .birthmonth, .birthday{
+    font-size: 24px;
+    margin-left: 5px;
+    margin-right: 20px;
+}
+
+.input-email, .input-name, .input-number {
+    width: 375px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.inputpassword{
+    width: 345px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.conditional, .warning{
+    margin-left: 150px;
+    margin-top: 0px;
+}
+
+.warning{
+    color: #F43F3F;
+}
+
+.input-year, .input-month, .input-day {
+    width: 80px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.register-btn-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.register-btn{
+    width: 650px;
+    height: 48px;
+    background-color: #EBEBEB;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    color: #999999;
+    margin-bottom: 100px;
+}
