@@ -64,29 +64,9 @@ const fetchPlaceId = async (x: string, y: string, placeName: string) => {
 // 구글 Places API로 이미지 URL 가져오기
 const fetchPlacePhoto = async (placeId: string) => {
 
-  try {
-    const params = {
-      place_id: placeId,
-      key: process.env.REACT_APP_GOOGLE_API_KEY,  // 구글 API 키
-    };
+  /*다른 기능 중 요청을 하지 않게 하기 위해 주석 처리(후에 주석 제거해야 함.)
 
-    const response = await axios.get('/api/google/maps/api/place/details/json', { params });
-    const result = response.data.result;
-
-    if (result.photos && result.photos.length > 0) {
-      const photoReference = result.photos[0].photo_reference;
-      // 실제 사진 URL 생성
-      const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
-      return photoUrl;
-    } else {
-      console.log("사진이 없습니다.");
-      return null;
-    }
-  } catch (error) {
-    console.error("이미지를 가져오는 중 오류 발생:", error);
-    return null;
-  }
-
+    */
 };
 
 // 음식점 정보와 이미지 가져오기 (캐시 기능 및 딜레이 추가)

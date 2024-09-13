@@ -66,6 +66,7 @@ const Login: React.FC = () => {
             });
 
             if (response.status === 200) {
+                localStorage.setItem('userEmail', loginData.email);
                 alert('로그인 성공!');
                 window.location.href = '/'; // 메인 페이지로 이동
             }
