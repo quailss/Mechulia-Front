@@ -62,13 +62,17 @@ const Login: React.FC = () => {
             const response = await axios.post('http://localhost:8080/api/auth/login', loginData, {
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                withCredentials: true,
             });
 
             if (response.status === 200) {
                 localStorage.setItem('userEmail', loginData.email);
                 alert('로그인 성공!');
-                window.location.href = '/'; // 메인 페이지로 이동
+                // 세션이 저장될 시간을 확보하기 위해 약간의 지연 추가
+                setTimeout(() => {
+                    window.location.href = '/'; // 메인 페이지로 이동
+                }, 200)
             }
         } catch (error) {
             console.error('로그인 중 오류 발생:', error);
