@@ -71,11 +71,13 @@ const Login: React.FC = () => {
                 alert('로그인 성공!');
                 // 세션이 저장될 시간을 확보하기 위해 약간의 지연 추가
                 setTimeout(() => {
-                    window.location.href = '/'; // 메인 페이지로 이동
+                    window.location.href = '/'; 
                 }, 200)
+            } else {
+                alert('로그인 실패!');
             }
         } catch (error) {
-            console.error('로그인 중 오류 발생:', error);
+            alert('로그인 실패!');
         }
     };
 
