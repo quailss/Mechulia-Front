@@ -16,13 +16,13 @@ const ThemeSlider: React.FC = () => {
 
     const slides: Slide[] = [
         { src: "https://github.com/quailss/image-data/blob/main/meat-1155132_1280.jpg?raw=true", text: "오늘은 고기파티!", keyword:"육류" },
-        { src: "https://github.com/quailss/image-data/blob/main/spicy.jpg?raw=true", text: "매콤한 한방이 필요해", keyword:"매운맛" },
+        { src: "https://github.com/quailss/image-data/blob/main/spicy.jpg?raw=true", text: "매콤한 한방이 필요해", keyword:"매운 맛" },
         { src: "https://github.com/quailss/image-data/blob/main/soup.jpg?raw=true", text: "따끈따끈 국물로 속을 달래자", keyword:"국물 요리" },
         { src: "https://github.com/quailss/image-data/blob/main/ramen-6651033_1280.jpg?raw=true", text: "쫄깃쫄깃 면발의 유혹", keyword:"면" },
         { src: "https://github.com/quailss/image-data/blob/main/dessert-1786311_1280.jpg?raw=true", text: "입안에서 녹아드는 달달한 디저트", keyword:"디저트" },
         { src: "https://github.com/quailss/image-data/blob/main/japans-1618622_1280.jpg?raw=true", text: "입안 가득 퍼지는 바다의 풍미", keyword:"해산물" },
         { src: "https://github.com/quailss/image-data/blob/main/midnight.jpg?raw=true", text: "오늘도 야식과 함께하는 늦은 밤", keyword:"야식" },
-        { src: "https://github.com/quailss/image-data/blob/main/bibimbap-4887394_1280.jpg?raw=true", text: "전통의 맛, 한식의 품격", keyword:"한식" },
+        { src: "https://github.com/quailss/image-data/blob/main/gimbap.jpg?raw=true", text: "맛있고 간편한 한 끼", keyword:"간편식사" },
     ];
 
     const slideContainerRef = useRef<HTMLDivElement>(null);

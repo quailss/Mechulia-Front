@@ -37,6 +37,7 @@
     box-sizing: border-box;
     text-align: center;
     margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .recipe-image {
@@ -74,28 +75,33 @@
     width: 80vw;
     top: 300px;
     font-size: 30px;
-    margin-left: 40px;
+    margin-left: 10px;
+}
+
+.another-theme-page{
+    margin-top: 320px;
 }
 
 .another-theme-slider-container{
     position: relative;
-    top: 300px;
-    width: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 0;
 }
 
 .another-theme-slider {
     position: relative;
     overflow: hidden; 
     width: 100%;
+    cursor: pointer;
 }
 
 .slides-wrapper {
     display: flex;
     transition: transform 0.5s ease-in-out;
+    z-index: 1;
 }
 
 .another-theme-slide {
@@ -104,9 +110,10 @@
     padding: 0 10px;
     display: flex;
     flex-direction: column; 
-    justify-content: center;
-    align-items: center; 
-    text-align: center;
+    cursor: pointer !important; 
+    pointer-events: auto !important;
+    position: relative; 
+    z-index: 1; 
 }
 
 .another-theme-slide img {
@@ -114,6 +121,12 @@
     height: 250px;
     border-radius: 12px;
     object-fit: cover;
+}
+
+
+.another-theme-p{
+    font-size: 24px;
+    cursor: pointer;
 }
 
 .prev, .next {
@@ -128,9 +141,7 @@
 }
 
 .prev:disabled, .next:disabled {
-    background-color: #eee;
-    cursor: not-allowed;
-    visibility: hidden;
+    display: none;
 }
 
 .prev {
@@ -144,7 +155,7 @@
 .slide-btn{
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-90%);
     background: rgba(25, 25, 25, 0.8);
     font-size: 25px;
     width: 54px;
