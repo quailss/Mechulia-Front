@@ -1,0 +1,165 @@
+.searchbar-fix{
+    position: fixed;
+    top: 100px; 
+    left: 0; 
+    width: 100%; 
+    transform: none; 
+    background-color: white;
+    z-index: 1000;
+}
+
+.theme-page{
+    position: relative; 
+    top: 180px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.theme-title{
+    font-size: 30px;
+}
+
+/*테마별 음식*/
+.theme-menu-container{
+    position: relative; 
+    top: 210px;
+    width: 100%;
+    z-index: 1;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.recipe-item {
+    flex: 1 1 calc(33.33%);
+    max-width: calc(33.33%);
+    box-sizing: border-box;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.recipe-image {
+    width: 360px;
+    height: 345px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.theme-pagination{
+    position: relative;
+    top: 200px;
+    text-align: center;
+}
+
+.theme-pagination button {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: none;
+    background-color: #cccccc;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.theme-pagination button:disabled {
+    background-color: #007bff;
+    color: white;
+    cursor: not-allowed;
+}
+
+
+/*다른 테마*/
+.another-theme {
+    position: relative;
+    width: 80vw;
+    top: 300px;
+    font-size: 30px;
+    margin-left: 40px;
+}
+
+.another-theme-slider-container{
+    position: relative;
+    top: 300px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.another-theme-slider {
+    position: relative;
+    overflow: hidden; 
+    width: 100%;
+}
+
+.slides-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.another-theme-slide {
+    flex: 0 0 calc(25%);
+    box-sizing: border-box;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center; 
+    text-align: center;
+}
+
+.another-theme-slide img {
+    width: 100%;
+    height: 250px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #ccc;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.prev:disabled, .next:disabled {
+    background-color: #eee;
+    cursor: not-allowed;
+    visibility: hidden;
+}
+
+.prev {
+    left: -70px;
+}
+
+.next {
+    right: -70px;
+}
+
+.slide-btn{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(25, 25, 25, 0.8);
+    font-size: 25px;
+    width: 54px;
+    height: 54px;
+    border-radius: 360px;
+    cursor: pointer;
+    display: flex;
+    z-index: 2;
+    border: 2px solid #676767;
+    color: white;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer{
+    position: relative;
+    height: 350px;
+}
