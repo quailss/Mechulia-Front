@@ -25,27 +25,53 @@
     color: #666666;
 }
 
-.search-id, .search-phone {
+.search-id, .search-phone, .reset-password {
     flex-grow: 1;
     padding: 8px;
     border: 2px solid #c7c7c7;
 }
 
-.find-id-button{
+.find-id-button, .reset-password-button{
     width: 100%;
     height: 48px;
     border: 2px solid #EBEBEB;
     margin-top: 30px;
     color: #999999;
     cursor: not-allowed;
+    background-color: white;
 }
 
-.find-id-button.active {
-    background-color: #2D2D2D; /* 활성화 상태 배경 색상 */
-    color: white; /* 활성화 상태 글자 색상 */
+.find-id-button.active, .reset-password-button.active {
+    background-color: #2D2D2D;
+    color: white; 
     cursor: pointer;
 }
   
-.find-id-button:disabled {
+.find-id-button:disabled, .reset-password-button:disabled {
 cursor: not-allowed;
 }
+
+.id-password-divider{
+    position: relative;
+    top: 110px;
+}
+
+/*비밀번호 재설정*/
+.reset-password-container{
+    position: relative;
+    top: 150px;
+    width: 40vw;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.reset-password-container div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.reset-password-container h1 {
+    margin-bottom: 50px;
+}
+

@@ -5,6 +5,7 @@ import "./styles/findAccount.css";
 import PopUp from './components/popup';
 
 const FindAccount:React.FC = () => {
+    //아이디 찾기
     const [username, setUsername] = useState('');
     const [userphone, setUserphone] = useState('');
     //서버에서 받은 이메일
@@ -12,8 +13,16 @@ const FindAccount:React.FC = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false); 
 
-    //두 입력값이 모두 채워졌는지 확인
+    //비밀번호 재설정
+    const [user_name, setUser_name] = useState('');
+    const [user_phone, setUser_phone] = useState('');
+    const [resetpassword, setResetpassword] = useState('');
+
+    //두 입력값이 모두 채워졌는지 확인(아이디 찾기)
     const isFormValid = username && userphone;
+
+    //입력값이 모두 채워졌는지 확인(비밀번호 재설정)
+    const isPasswordValid = user_name && user_phone && resetpassword;
 
     //아이디 찾기
     const handleFindId = async () => {
@@ -51,7 +60,9 @@ const FindAccount:React.FC = () => {
           setEmail(''); 
           setIsModalOpen(true);
         }
-      };
+    };
+
+    //비밀번호 재설정
 
     return(
         <div>
@@ -76,6 +87,28 @@ const FindAccount:React.FC = () => {
                     )}
                 </PopUp>
             </div>
+
+            <hr className="id-password-divider"></hr>
+
+            <div className="reset-password-container">
+                <h1>비밀번호 재설정</h1>
+                <div>
+                    <label className="text-font">이름 </label>
+                    <input type="text" id="username" name="username" className="search-id" value={user_name} onChange={(e) => setUser_name(e.target.value)} required />
+                </div>
+                <div>
+                    <label className="text-font">전화번호 </label>
+                    <input type="phone" id="userphone" name="userphone" className="search-phone" value={user_phone} onChange={(e) => setUser_phone(e.target.value)} required />
+                </div>
+                <div>
+                    <label className="text-font">새로운 비밀번호 </label>
+                    <input type="password" id="password" name="password" className="reset-password" value={resetpassword} onChange={(e) => setResetpassword(e.target.value)} required />
+                </div>
+
+                <button className={`reset-password-button ${isPasswordValid ? 'active' : ''}`}>비밀번호 재설정</button>
+            </div>
+
+            <footer className="footer"></footer>
         </div>
     );
 };
