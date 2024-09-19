@@ -116,7 +116,7 @@ const Login: React.FC = () => {
                 </div>
                 <div className="management-container">
                     <Link to="/createAccount" className="register">회원가입</Link>
-                    <Link to="#" className="find">ID/PW 찾기</Link>
+                    <Link to="/findAccount" className="find">ID/PW 찾기</Link>
                 </div>
                 <div className="division">
                     <hr className="line line-left" />
