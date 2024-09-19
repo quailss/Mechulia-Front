@@ -46,15 +46,14 @@
     text-align: left !important;
     padding-left: 10px;
   }
-
+  
   .pagination-container {
-    width: 65vw;         
-    display: flex;       
-    justify-content: center; 
+    display: flex;
+    justify-content: center;
   }
   
   .pagination {
-    display: inline-block;
+    display: flex;
   }
   
   .pagination button {
@@ -71,3 +70,8 @@
     color: white;
     cursor: not-allowed;
   }
+
+  .pagination-container button {
+    z-index: 1;
+  }
+  

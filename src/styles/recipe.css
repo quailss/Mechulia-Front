@@ -1,0 +1,75 @@
+.recipe-main{
+    position: relative;
+    top: 200px;
+    width: 80vw;
+    display: flex;
+}
+
+.food-image{
+    position: relative;
+    width: 536px;
+    height: 536px;
+    border-radius: 8px;
+    display: block;
+}
+
+.bookmark-icon {
+    position: absolute; 
+    top: 15px; 
+    left: 495px; 
+    font-size: 30px; 
+    color: white; 
+    cursor: pointer; 
+}
+
+.food-container{
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.food-name{
+    font-size: 40px;
+    font-weight: bold !important;
+    margin-top: 30px;
+}
+
+.required-materials, .kcal{
+    margin-top: 50px;
+}
+
+.star-rating {
+    display: flex;
+    align-items: center; 
+    margin-top: -20px;
+}
+
+.stars {
+    display: flex; 
+    margin-right: 5px; 
+}
+
+.review-count {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 7px;
+}
+
+/*레시피 정보*/
+.how-to-make{
+    position: relative;
+    top: 250px;
+}
+
+.manual-image{
+    border-radius: 8px;
+    width: 250px;
+    height: 250px;
+    margin-top: 30px;
+}
+
+/*음식점*/
+.related-restaurant{
+    position: relative;
+    top: 300px;
+}

@@ -46,19 +46,14 @@ export const fetchRecipes = createAsyncThunk(
 
       const response = await axios.get(url);
 
-      console.log("Request URL:", url);
-
       if (response.status !== 200) {
         throw new Error(`Unexpected status code: ${response.status}`);
       }
-
-      console.log("data: ", response.data);
 
       const { recipes, totalElements } = response.data; 
 
       return { recipes, totalElements, menuId:menu_id };
     } catch (error: any) {
-      console.error('Error fetching recipes:', error.message || error);
       throw new Error(error.response?.data || 'Failed to fetch recipes');
     }
   }

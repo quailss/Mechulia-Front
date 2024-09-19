@@ -5,6 +5,7 @@ import restaurantReducer from "./slices/restaurantSlice";
 import categoryReducer from "./slices/categorySlice";
 import menuReducer from "./slices/menuSlice";
 import bannerReducer from "./slices/bannerSlice";
+import recipeReducer from "./slices/recipeSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         restaurants: restaurantReducer,
         menu: menuReducer,
         banner: bannerReducer,
+        recipe: recipeReducer,
     },
 });
 

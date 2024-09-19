@@ -5,6 +5,11 @@ import '../styles/restaurant.css';
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
 
+interface RestaurantProps {
+  name?: string;
+}
+
+
 interface LocationData {
     [key: string]: string[];
   }
@@ -14,7 +19,7 @@ const locations: LocationData = locationData;
 const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-const LocationSelector: React.FC = () => {
+const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
     const [selectedProvince, setSelectedProvince] = useState<string>('서울특별시');
     const [selectedCity, setSelectedCity] = useState<string>('종로구');
     const [cities, setCities] = useState<string[]>([]);
@@ -28,9 +33,17 @@ const LocationSelector: React.FC = () => {
 
     useEffect(() => {
       if (selectedProvince && selectedCity) {
-        dispatch(fetchRestaurants({ region: selectedProvince, city: selectedCity, category: selectedCategory || '' }));
+        // name이 있을 때만 name을 포함시켜서 fetchRestaurants 호출
+        dispatch(
+          fetchRestaurants({
+            region: selectedProvince,
+            city: selectedCity,
+            category: selectedCategory || '',
+            name: name || undefined, 
+          })
+        );
       }
-    }, [selectedProvince, selectedCity, selectedCategory, dispatch]); 
+    }, [selectedProvince, selectedCity, selectedCategory, name, dispatch]);
 
     //슬라이드 너비 업데이트
     useEffect(() => {

@@ -3,9 +3,15 @@ import { RootState, AppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { useDispatch, TypedUseSelectorHook } from "react-redux";
 import { fetchBannerRecipes } from "../store/slices/bannerSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/banner.css"; // 스타일 파일은 필요에 맞게 수정
 import { Link } from "react-router-dom";
 
+interface ThemeRecipe {
+  name: string;
+  image_url: string;
+  id: number;
+}
 
 // 5개의 랜덤 레시피를 선택하는 함수
 function getRandomRecipes(recipes: any[]) {
@@ -18,6 +24,10 @@ const Banner = () => {
     const { bannerRecipes, status, error } = useSelector((state: RootState) => state.banner);
     const [randomRecipes, setRandomRecipes] = useState<any[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    const location = useLocation();
+    const params = new URLSearchParams(location.search);
+    const navigate = useNavigate();
   
     // 컴포넌트가 처음 렌더링될 때 레시피 가져오기
     useEffect(() => {
@@ -47,6 +57,8 @@ const Banner = () => {
     if (status === 'failed') {
       return <div>Error: {error}</div>;
     }
+
+    const currentRecipe = bannerRecipes[currentIndex];
   
     return (
       <div className="banner-container">
@@ -59,7 +71,16 @@ const Banner = () => {
                     <span className="banner-counter-container">
                         <span className="banner-counter-number">{currentIndex + 1}</span> / {randomRecipes.length}
                     </span>
-                    <Link to="#" className="banner-recipe">레시피 보러가기</Link>
+                    <button
+                      className="banner-recipe"
+                      onClick={() => {
+                        navigate(`/recipe?${currentRecipe.name}`, {
+                          state: { name: currentRecipe.name, id: currentRecipe.id, image_url: encodeURIComponent(currentRecipe.image_url) }
+                        });
+                      }}
+                    >
+                      레시피 보러가기
+                    </button>
                 </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import Main from "./main";
 import Login from "./login";
 import CreateAccount from "./createAccount";
 import Theme from "./theme";
+import Recipe from "./recipe";
 
 function AppRouter() {
     return (
@@ -12,6 +13,7 @@ function AppRouter() {
             <Route path="/login" element={<Login />} />
             <Route path="/createAccount" element={<CreateAccount />} />
             <Route path="/theme" element={<Theme />} />
+            <Route path="/recipe" element={<Recipe />} />
         </Routes>
     );
 }

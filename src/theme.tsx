@@ -115,7 +115,12 @@ const Theme: React.FC = () => {
 
                 <div className="theme-menu-container">
                     {recipes.map((recipe, index) => (
-                    <div key={index} className="recipe-item">
+                    <div key={index} className="recipe-item" 
+                    onClick={() => {
+                        const encodedImageUrl = encodeURIComponent(recipe.image_url);
+                        navigate(`/recipe?${recipe.name}`, { state: { name: recipe.name, id: recipe.id, image_url: encodedImageUrl } });
+                    }}//클릭하면 레시피 페이지로 이동
+                    >
                         <img src={recipe.image_url} alt={recipe.name} className="recipe-image" />
                         <h2>{recipe.name}</h2>
                     </div>
