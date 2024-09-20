@@ -69,6 +69,12 @@
     text-decoration: underline solid black;
 }
 
+.login-nav{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .logout{
     font-size: 23px;
     background-color: transparent;
@@ -80,4 +86,64 @@
 
 .logout:hover{
     text-decoration: underline solid rgb(189, 28, 28);
+}
+
+/*드롭다운*/
+.nav-dropdown{
+    position: relative;
+    z-index: 1000;
+}
+
+
+.dropdown-toggle {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 23px;
+    font-family: 'GangwonEdu_OTFBoldA';
+    width: 150px;
+}
+
+.dropdown-toggle::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    bottom: -2px;
+    width: 0;
+    height: 2px; 
+    background-color: black;
+  }
+  
+  .dropdown-toggle:hover::after {
+    width: 80%; 
+  }
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 5%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    display: block;
+    width: 110px;
+}
+  
+.dropdown-menu li {
+    padding: 10px;
+}
+  
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+}
+  
+.dropdown-menu li a:hover {
+    border-bottom: 1px solid #333;
 }

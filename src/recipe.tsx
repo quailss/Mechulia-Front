@@ -11,6 +11,7 @@ import { fetchRecipe, RecipeData } from "./store/slices/recipeSlice";
 import './styles/recipe.css';
 import { FaStar, FaBookmark } from "react-icons/fa";
 import Restaurant from "./components/restaurant";
+import axios from "axios";
 
 //별점 정의
 const StarRating = ({ averageRating = 0, reviewCount = 0 }) => {
@@ -40,7 +41,7 @@ const StarRating = ({ averageRating = 0, reviewCount = 0 }) => {
 
 const Recipe: React.FC = () => {
     const location = useLocation();
-    const { name, image_url } = location.state;
+    const { id, name, image_url } = location.state;
     const decodedImageUrl = decodeURIComponent(image_url);
 
     const dispatch = useDispatch<AppDispatch>();
@@ -49,6 +50,53 @@ const Recipe: React.FC = () => {
     const recipeData = useSelector((state: RootState) => state.recipe.data as RecipeData | null); // RecipeData 타입 적용
     const recipeLoading = useSelector((state: RootState) => state.recipe.loading);
     const recipeError = useSelector((state: RootState) => state.recipe.error);
+
+    //북마크
+    const [isBookmarked, setIsBookmarked] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    //별점
+    const [rating, setRating] = useState(0);
+    const [hover, setHover] = useState<number | null>(null);
+    const [review, setReview] = useState('');
+    const [isButtonActive, setIsButtonActive] = useState(false); 
+
+    // 별점 선택 처리
+    const handleStarClick = (value: number) => {
+        setRating(value);
+        setIsButtonActive(review.trim().length > 0 && value > 0);
+    };
+
+    // 리뷰 입력 처리
+    const handleReviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setReview(e.target.value);
+        setIsButtonActive(e.target.value.trim().length > 0 && rating > 0);
+    };
+
+    //리뷰 제출
+    const handleSubmit = async() => {
+
+        try {
+            const reviewData = {
+                recipe_id: id,
+                score: rating,
+                content: review
+            };
+
+            const response = await axios.post('http://localhost:8080/api/review/write', reviewData, {
+                withCredentials: true // 세션 정보를 포함하여 요청
+            });
+
+            if (response.status === 200) {
+                alert('리뷰가 저장되었습니다.');
+                setRating(0); 
+                setReview('');
+                setIsButtonActive(false);
+            }
+        } catch(error) {
+            alert('리뷰 저장에 실패했습니다.');
+        }
+    };
 
 
     // 나중에 API로 별점 및 리뷰 개수 가져올 수 있도록 상태 추가
@@ -92,6 +140,34 @@ const Recipe: React.FC = () => {
         }
     };
 
+    //북마크 확인
+
+    //북마크 추가 및 삭제
+    const handleBookmarkClick = async () => {
+        setLoading(true);
+        try {
+            if (isBookmarked) {
+              // 북마크 삭제 요청
+              await axios.delete(`http://localhost:8080/api/bookmark/delete`, {
+                params: { bookmarkId: id },
+                withCredentials: true
+              });
+            } else {
+              // 북마크 추가 요청
+              await axios.post(`http://localhost:8080/api/bookmark/addBookmark`, null, {
+                params: { recipeId: id },
+                withCredentials: true
+              });
+            }
+
+            setIsBookmarked(!isBookmarked);
+          } catch (error) {
+            console.error("Error handling bookmark:", error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
     // 에러 처리
     if (recipeError) {
         return (
@@ -104,7 +180,12 @@ const Recipe: React.FC = () => {
                 <div className="recipe-main">
                     <div className="image-container">
                         <img src={decodedImageUrl} alt={name} className="food-image" />
-                        <FaBookmark className="bookmark-icon" />
+                        <FaBookmark className="bookmark-icon" 
+                        onClick={handleBookmarkClick}
+                        style={{
+                          color: isBookmarked ? "#FFD700" : "#ccc",
+                          cursor: loading ? "not-allowed" : "pointer",
+                        }}/>
                     </div>
                     <div className="food-container">
                         <h1 className="food-name">{name}</h1>
@@ -117,6 +198,26 @@ const Recipe: React.FC = () => {
                         <p>검색되는 레시피가 없습니다.</p>
                     </div>
                 </div>
+
+                <div className="recipe-review-container">
+                    <h1>리뷰</h1>
+                                    <div>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <FaStar
+                        key={star}
+                        size={25} // 별의 크기
+                        color={star <= (hover || rating) ? "#ffc107" : "#e4e5e9"} 
+                        onClick={() => handleStarClick(star)}
+                        onMouseEnter={() => setHover(star)}
+                        onMouseLeave={() => setHover(null)} 
+                        style={{ cursor: 'pointer', marginRight: 5 }}
+                        />
+                    ))}
+                    </div>
+                    <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
+                    <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+                </div>
+
                 <div className="related-restaurant">
                     <h1>여기에서 먹을 수 있어요!</h1>
                     <Restaurant />
@@ -136,7 +237,12 @@ const Recipe: React.FC = () => {
                 <div className="recipe-main">
                     <div className="image-container">
                         <img src={decodedImageUrl} alt={name} className="food-image" />
-                        <FaBookmark className="bookmark-icon" />
+                        <FaBookmark className="bookmark-icon"
+                        onClick={handleBookmarkClick}
+                        style={{
+                          color: isBookmarked ? "#FFD700" : "#ccc",
+                          cursor: loading ? "not-allowed" : "pointer",
+                        }} />
                     </div>
                     <div className="food-container">
                         <h1 className="food-name">{name}</h1>
@@ -149,6 +255,26 @@ const Recipe: React.FC = () => {
                         <p>검색되는 레시피가 없습니다.</p>
                     </div>
                 </div>
+
+                <div className="recipe-review-container">
+                    <h1>리뷰</h1>
+                                    <div>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <FaStar
+                        key={star}
+                        size={25} // 별의 크기
+                        color={star <= (hover || rating) ? "#ffc107" : "#e4e5e9"} 
+                        onClick={() => handleStarClick(star)}
+                        onMouseEnter={() => setHover(star)}
+                        onMouseLeave={() => setHover(null)} 
+                        style={{ cursor: 'pointer', marginRight: 5 }}
+                        />
+                    ))}
+                    </div>
+                    <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
+                    <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+                </div>
+
                 <div className="related-restaurant">
                     <h1>여기에서 먹을 수 있어요!</h1>
                     <Restaurant />
@@ -174,7 +300,12 @@ const Recipe: React.FC = () => {
             <div className="recipe-main">
                 <div className="image-container">
                     {recipeData.ATT_FILE_NO_MAIN && <img src={recipeData.ATT_FILE_NO_MAIN} alt="메인 이미지" className="food-image" />}
-                    <FaBookmark className="bookmark-icon" />
+                    <FaBookmark className="bookmark-icon" 
+                    onClick={handleBookmarkClick}
+                    style={{
+                      color: isBookmarked ? "#FFD700" : "#ccc",
+                      cursor: loading ? "not-allowed" : "pointer",
+                    }}/>
                 </div>
                 <div className="food-container">
                      <h1 className="food-name">{isExactMatch ? name : `비슷한 레시피: ${recipeData.RCP_NM}`}</h1>
@@ -196,6 +327,26 @@ const Recipe: React.FC = () => {
                     ))}
                 </div>
             </div>
+
+            <div className="recipe-review-container">
+                <h1>리뷰</h1>
+                                <div>
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                    key={star}
+                    size={25} // 별의 크기
+                    color={star <= (hover || rating) ? "#ffc107" : "#e4e5e9"} 
+                    onClick={() => handleStarClick(star)}
+                    onMouseEnter={() => setHover(star)}
+                    onMouseLeave={() => setHover(null)} 
+                    style={{ cursor: 'pointer', marginRight: 5 }}
+                    />
+                ))}
+                </div>
+                <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
+                <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+            </div>  
+
             <div className="related-restaurant">
                 <h1>여기에서 먹을 수 있어요!</h1>
                 <Restaurant name={name} />

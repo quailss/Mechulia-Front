@@ -8,6 +8,8 @@ const Navigation = () => {
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
 
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     //세션에서 정보 가져오기
     useEffect(() => {
         const fetchSessionInfo = async() => {
@@ -40,11 +42,28 @@ const Navigation = () => {
         window.location.reload();
     };
 
+    //드롭다운
+    const toggleDropdown = () => {
+        setIsDropdownOpen(!isDropdownOpen);
+    };
+
     return (
         <nav className="nav-container">
             <Link to="/" className="logo-title">메추리아</Link>
             {loggedIn ? (
-                <div>
+                <div className="login-nav">
+                    <div className="nav-dropdown">
+                        <button onClick={toggleDropdown} className="dropdown-toggle">
+                            My 🔽
+                        </button>
+                        {isDropdownOpen && (
+                        <ul className="dropdown-menu">
+                            <li><Link to="/bookmark">즐겨찾기</Link></li>
+                            <li><Link to="/reviews">내가 쓴 리뷰</Link></li>
+                            <li><Link to="/profile">내 정보관리</Link></li>
+                        </ul>
+                        )}
+                    </div>
                     <button onClick={handleLogout} className="logout">로그아웃</button>
                 </div>
             ) : (

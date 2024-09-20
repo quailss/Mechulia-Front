@@ -6,6 +6,7 @@ import CreateAccount from "./createAccount";
 import Theme from "./theme";
 import Recipe from "./recipe";
 import FindAccount from "./findAccount";
+import Bookmark from "./bookmark";
 
 function AppRouter() {
     return (
@@ -16,6 +17,7 @@ function AppRouter() {
             <Route path="/theme" element={<Theme />} />
             <Route path="/recipe" element={<Recipe />} />
             <Route path="/findAccount" element={<FindAccount />} />
+            <Route path="/bookmark" element={<Bookmark />} />
         </Routes>
     );
 }

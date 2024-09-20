@@ -5,7 +5,7 @@
     width: 100%; 
     transform: none; 
     background-color: white;
-    z-index: 1000;
+    z-index: 500;
 }
 
 .theme-page{
