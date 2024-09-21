@@ -81,12 +81,19 @@ const Login: React.FC = () => {
         }
     };
 
+    //엔터 키로 로그인 처리
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter' && isFormValid) {
+            handleLogin(event);
+        }
+    };
+
     return(
         <div className="page-container">
             <div className="login-page">
                 <h2 className="title">메추리아</h2>
                 <div className="login-container">
-                    <input type="text" id="username" name="username" className="input-id" required placeholder="아이디 입력" value={username} onChange={handleUsernameChange} />
+                    <input type="text" id="username" name="username" className="input-id" required placeholder="아이디 입력" value={username} onChange={handleUsernameChange} onKeyDown={handleKeyDown} />
                     <div style={{ position: 'relative', display: 'inline-block' }}>
                     <input
                         type={showPassword ? 'text' : 'password'} // 비밀번호 표시 상태에 따라 타입 변경
@@ -97,6 +104,7 @@ const Login: React.FC = () => {
                         placeholder="비밀번호 입력"
                         value={password}
                         onChange={handlePasswordChange}
+                        onKeyDown={handleKeyDown}
                         style={{ paddingRight: '30px' }} 
                     />
                     <span
@@ -112,7 +120,7 @@ const Login: React.FC = () => {
                         {showPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
                     </div>
-                    <button className={`login-button ${isFormValid ? 'active' : ''}`} disabled={!isFormValid} onClick={handleLogin}>로그인</button>
+                    <button className={`login-button ${isFormValid ? 'active' : ''}`} disabled={!isFormValid} onClick={handleLogin} onKeyDown={handleKeyDown}>로그인</button>
                 </div>
                 <div className="management-container">
                     <Link to="/createAccount" className="register">회원가입</Link>

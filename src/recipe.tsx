@@ -53,7 +53,9 @@ const Recipe: React.FC = () => {
 
     //북마크
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [bookmarkId, setBookmarkId] = useState<number | null>(null); 
     const [loading, setLoading] = useState(false);
+    const recipeId = id;
 
     //별점
     const [rating, setRating] = useState(0);
@@ -83,7 +85,7 @@ const Recipe: React.FC = () => {
                 content: review
             };
 
-            const response = await axios.post('http://localhost:8080/api/review/write', reviewData, {
+            const response = await axios.post('http://localhost:8080/api/review', reviewData, {
                 withCredentials: true // 세션 정보를 포함하여 요청
             });
 
@@ -141,6 +143,25 @@ const Recipe: React.FC = () => {
     };
 
     //북마크 확인
+    useEffect(() => {
+        const fetchBookmarkStatus = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/bookmark/checked`, {
+                    params: {recipeId},
+                    withCredentials:true,
+                });
+
+                console.log("API Response:", response.data);
+                
+                setIsBookmarked(response.data);
+                setBookmarkId(response.data.bookmarkId); 
+            } catch(error) {
+                console.error("북마크 상태 오류: ", error);
+            }
+        };
+
+        fetchBookmarkStatus();
+    }, [recipeId]);
 
     //북마크 추가 및 삭제
     const handleBookmarkClick = async () => {
@@ -148,16 +169,17 @@ const Recipe: React.FC = () => {
         try {
             if (isBookmarked) {
               // 북마크 삭제 요청
-              await axios.delete(`http://localhost:8080/api/bookmark/delete`, {
-                params: { bookmarkId: id },
-                withCredentials: true
+              const response = await axios.delete(`http://localhost:8080/api/bookmark?bookmarkId=${bookmarkId}`, {
+                withCredentials: true,
               });
+              console.log("북마크 삭제 요청: ", response);
             } else {
               // 북마크 추가 요청
-              await axios.post(`http://localhost:8080/api/bookmark/addBookmark`, null, {
-                params: { recipeId: id },
-                withCredentials: true
+              const response = await axios.post(`http://localhost:8080/api/bookmark`, null, {
+                params: { recipeId },
+                withCredentials: true,
               });
+              setBookmarkId(response.data.bookmarkId);
             }
 
             setIsBookmarked(!isBookmarked);
