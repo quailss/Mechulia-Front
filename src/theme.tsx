@@ -37,8 +37,6 @@ const Theme: React.FC = () => {
     useEffect(() => {
         const fetchThemeRecipes = async () => {
             const requestUrl = `http://localhost:8080/api/recipe/main/theme?keyword=${keyword}&page=${currentPage}`;
-    
-            console.log('Request URL:', requestUrl);
             
             try {
                 const response = await axios.get(requestUrl);
@@ -52,7 +50,6 @@ const Theme: React.FC = () => {
 
                 setLoading(false);
                 } catch (error) {
-                    console.error('Error fetching recipes:', error);
                     setLoading(false);
                 }
             };
