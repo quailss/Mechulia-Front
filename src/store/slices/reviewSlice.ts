@@ -1,20 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export interface Review {
+interface Review {
     id: number;
-    member: {
-        name: string;
-    };
+    content: string;
     score: number;
     createdAt: string;
-    content: string;
+    updatedAt: string;
+    memberId: number;
+    memberName: string;
+    recipeId: number;
 }
 
 
 // 3개의 리뷰 데이터만 가져오는 Thunk
 export const fetchPreviewReviews = createAsyncThunk('reviews/fetchPreviewReviews', async (recipeId: string) => {
     const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}`);
+
     return response.data.slice(0, 3); // 3개만 반환
 });
 
@@ -33,7 +35,16 @@ const reviewsSlice = createSlice({
         status: 'idle',
         error: null as string | null
     },
-    reducers: {},
+    reducers: {
+        // 리뷰 초기화 액션
+        clearReviews(state) {
+            state.previewReviews = [];
+            state.allReviews = [];
+            state.averageScore = 0;
+            state.status = 'idle';
+            state.error = null;
+        }
+    },
     extraReducers: (builder) => {
         // 3개의 리뷰만 처리
         builder
@@ -70,5 +81,6 @@ const reviewsSlice = createSlice({
     }
 });
 
+export const { clearReviews } = reviewsSlice.actions;
 export default reviewsSlice.reducer;
 

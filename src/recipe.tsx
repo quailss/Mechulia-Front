@@ -1,50 +1,41 @@
 import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store/store';
-import { Provider } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import store from "./store/store";
 import { fetchRestaurants } from "./store/slices/restaurantSlice";
 import Navigation from "./components/nav";
 import SearchBar from "./components/searchBar";
-import { fetchRecipe, RecipeData } from "./store/slices/recipeSlice";
-import { fetchPreviewReviews, fetchReviews } from "./store/slices/reviewSlice";
+import { fetchRecipe } from "./store/slices/recipeSlice";
+import { fetchPreviewReviews, fetchReviews, clearReviews } from "./store/slices/reviewSlice";
 import './styles/recipe.css';
 import { FaStar, FaBookmark, FaStarHalfAlt } from "react-icons/fa";
 import Restaurant from "./components/restaurant";
 import axios from "axios";
-
-interface Member {
-    id: number;
-    name: string;
-    email: string;
-}
-
-interface Recipe {
-    id: number;
-    name: string;
-    image_url: string;
-}
 
 interface Review {
     id: number;
     content: string;
     score: number;
     createdAt: string;
-    member: Member;
-    recipe: Recipe;
+    updatedAt: string;
+    memberId: number;
+    memberName: string;
+    recipeId: number;
 }
-
 
 const Recipe: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { id, name, image_url } = location.state;
     const decodedImageUrl = decodeURIComponent(image_url);
+
+    //이미지 인코딩
+    const encodedImageUrl = encodeURIComponent(decodedImageUrl);
 
     const dispatch = useDispatch<AppDispatch>();
 
     // Redux 상태 가져오기
-    const recipeData = useSelector((state: RootState) => state.recipe.data as RecipeData | null); 
+    const recipeData = useSelector((state: RootState) => state.recipe.data);
     const recipeLoading = useSelector((state: RootState) => state.recipe.loading);
     const recipeError = useSelector((state: RootState) => state.recipe.error);
 
@@ -69,6 +60,14 @@ const Recipe: React.FC = () => {
     const previewReviews = useSelector((state: RootState) => state.review.previewReviews as Review[]);
     const reviewsStatus = useSelector((state: RootState) => state.review.status);
 
+
+    // 레시피 가져오기
+    useEffect(() => {
+        if (name) {
+            dispatch(fetchRecipe(name));
+        }
+    }, [dispatch, name]);
+    
     //평균 별점을 위해 전체 리뷰 렌더링 하기
     useEffect(() => {
         dispatch(fetchReviews(id)); 
@@ -130,6 +129,11 @@ const Recipe: React.FC = () => {
         }
     };
 
+    // 페이지가 변경될 때 리뷰 초기화
+    useEffect(() => {
+        dispatch(clearReviews()); 
+    }, [location.pathname, dispatch]);
+
     //리뷰 가져오기
     useEffect(() => {
         if (reviewsStatus === 'idle') {
@@ -157,10 +161,6 @@ const Recipe: React.FC = () => {
         );
     };
 
-    // 나중에 API로 별점 및 리뷰 개수 가져올 수 있도록 상태 추가
-    const [averageRating, setAverageRating] = useState(0);
-    const [reviewCount, setReviewCount] = useState(0);
-
     useEffect(() => {
         if (name) {
             dispatch(fetchRestaurants({
@@ -174,30 +174,6 @@ const Recipe: React.FC = () => {
         }
     }, [dispatch, name]);
 
-    // API 호출
-    useEffect(() => {
-        if (name) {
-            dispatch(fetchRecipe(name));
-            // 여기서 별점과 리뷰 개수를 가져오는 비동기 함수 추가
-            fetchRatingData();
-        }
-    }, [dispatch, name]);
-
-    // 별점 데이터 가져오기 (나중에 REST API로 변경)
-    const fetchRatingData = async () => {
-        try {
-            // 나중에 실제 API로 변경할 부분
-            const response = await fetch("/api/reviews"); // 실제 API 주소로 변경
-            const data = await response.json();
-
-            // 받은 데이터로 상태 업데이트
-            setAverageRating(data.averageRating || 0);
-            setReviewCount(data.reviewCount || 0);
-        } catch (error) {
-            console.error("Error fetching rating data:", error);
-        }
-    };
-
     //북마크 확인
     useEffect(() => {
         const fetchBookmarkStatus = async () => {
@@ -209,7 +185,6 @@ const Recipe: React.FC = () => {
                 console.log("API Response:", response.data);
 
                 setIsBookmarked(response.data);
-                setBookmarkId(response.data.bookmarkId); 
             } catch(error) {
                 console.error("북마크 상태 오류: ", error);
             }
@@ -224,7 +199,7 @@ const Recipe: React.FC = () => {
         try {
             if (isBookmarked) {
               // 북마크 삭제 요청
-              const response = await axios.delete(`http://localhost:8080/api/bookmark/${bookmarkId}`, {
+              const response = await axios.delete(`http://localhost:8080/api/bookmark/recipe/${recipeId}`, {
                 withCredentials: true,
               });
               console.log("북마크 삭제 요청: ", response);
@@ -233,13 +208,20 @@ const Recipe: React.FC = () => {
               const response = await axios.post(`http://localhost:8080/api/bookmark/${recipeId}`, null, {
                 withCredentials: true,
               });
-              setBookmarkId(response.data.bookmarkId);
+              console.log("북마크 추가: ", response);
+
             }
 
             setIsBookmarked(!isBookmarked);
-          } catch (error) {
-            console.error("Error handling bookmark:", error);
-          } finally {
+        } catch (error: any) {
+            // 인증 관련 오류 발생 시 로그인 페이지로 리다이렉트
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                console.log("로그인 해주세요.");
+                navigate('/login'); 
+            } else {
+                console.error("북마크 처리 중 오류 발생:", error);
+            }
+        } finally {
             setLoading(false);
           }
         };
@@ -259,7 +241,7 @@ const Recipe: React.FC = () => {
                         <FaBookmark className="bookmark-icon" 
                         onClick={handleBookmarkClick}
                         style={{
-                          color: isBookmarked ? "#FFD700" : "#ccc",
+                          color: isBookmarked ? "#FFD700" : "#EBEBEB",
                           cursor: loading ? "not-allowed" : "pointer",
                         }}/>
                     </div>
@@ -280,7 +262,7 @@ const Recipe: React.FC = () => {
 
                 <div className="recipe-review-container">
                     <h1>리뷰</h1>
-                                    <div>
+                    <div>
                     {[1, 2, 3, 4, 5].map((star) => (
                         <FaStar
                         key={star}
@@ -297,20 +279,34 @@ const Recipe: React.FC = () => {
                     <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
 
                     <div className="reviews-container">
-                        {previewReviews.map((review) => (
+                    {previewReviews.length > 0 ? (
+                        previewReviews.map((review) => (
                             <div key={review.id} className="review-box">
                                 <div className="review-writer-container">
-                                    <p className="review-writer">{review.member.name} </p>
+                                    <p className="review-writer">{review.memberName} </p>
                                     <p className="review-score">{renderStars(review.score)} </p>
                                     <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
                                 </div>
                                 <p className="review-content"> {review.content} </p>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <p>리뷰가 없습니다.</p> // 리뷰가 없을 때 보여줄 내용
+                    )}
+
+                    {/* 리뷰가 있을 때만 "리뷰 전체보기" 링크 표시 */}
+                    {previewReviews.length > 0 && (
                         <div className="full-review-container">
-                            <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
+                            <Link 
+                                to={`/recipeReview?name=${encodeURIComponent(name)}`}  
+                                state={{ recipeId: recipeId, name: name, image_url: encodedImageUrl }} 
+                                className="view-full-review"
+                            >
+                                리뷰 전체보기 <span className="arrow">〉</span>
+                            </Link>
                         </div>
-                    </div>
+                    )}
+                </div>
 
                 </div>
 
@@ -336,7 +332,7 @@ const Recipe: React.FC = () => {
                         <FaBookmark className="bookmark-icon"
                         onClick={handleBookmarkClick}
                         style={{
-                          color: isBookmarked ? "#FFD700" : "#ccc",
+                          color: isBookmarked ? "#FFD700" : "#EBEBEB",
                           cursor: loading ? "not-allowed" : "pointer",
                         }} />
                     </div>
@@ -374,20 +370,34 @@ const Recipe: React.FC = () => {
                     <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
 
                     <div className="reviews-container">
-                        {previewReviews.map((review) => (
+                    {previewReviews.length > 0 ? (
+                        previewReviews.map((review) => (
                             <div key={review.id} className="review-box">
                                 <div className="review-writer-container">
-                                    <p className="review-writer">{review.member.name} </p>
+                                    <p className="review-writer">{review.memberName} </p>
                                     <p className="review-score">{renderStars(review.score)} </p>
                                     <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
                                 </div>
                                 <p className="review-content"> {review.content} </p>
                             </div>
-                        ))}
+                        ))
+                    ) : (
+                        <p>리뷰가 없습니다.</p> // 리뷰가 없을 때 보여줄 내용
+                    )}
+
+                    {/* 리뷰가 있을 때만 "리뷰 전체보기" 링크 표시 */}
+                    {previewReviews.length > 0 && (
                         <div className="full-review-container">
-                            <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
+                            <Link 
+                                to={`/recipeReview?name=${encodeURIComponent(name)}`}  
+                                state={{ recipeId: recipeId, name: name, image_url: encodedImageUrl }} 
+                                className="view-full-review"
+                            >
+                                리뷰 전체보기 <span className="arrow">〉</span>
+                            </Link>
                         </div>
-                    </div>
+                    )}
+                </div>
 
                 </div>
 
@@ -419,7 +429,7 @@ const Recipe: React.FC = () => {
                     <FaBookmark className="bookmark-icon" 
                     onClick={handleBookmarkClick}
                     style={{
-                      color: isBookmarked ? "#FFD700" : "#ccc",
+                      color: isBookmarked ? "#FFD700" : "#EBEBEB",
                       cursor: loading ? "not-allowed" : "pointer",
                     }}/>
                 </div>
@@ -466,19 +476,33 @@ const Recipe: React.FC = () => {
                 <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
 
                 <div className="reviews-container">
-                    {previewReviews.map((review) => (
-                        <div key={review.id} className="review-box">
-                            <div className="review-writer-container">
-                                <p className="review-writer">{review.member.name} </p>
-                                <p className="review-score">{renderStars(review.score)} </p>
-                                <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
+                    {previewReviews.length > 0 ? (
+                        previewReviews.map((review) => (
+                            <div key={review.id} className="review-box">
+                                <div className="review-writer-container">
+                                    <p className="review-writer">{review.memberName} </p>
+                                    <p className="review-score">{renderStars(review.score)} </p>
+                                    <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
+                                </div>
+                                <p className="review-content"> {review.content} </p>
                             </div>
-                            <p className="review-content"> {review.content} </p>
+                        ))
+                    ) : (
+                        <p>리뷰가 없습니다.</p> // 리뷰가 없을 때 보여줄 내용
+                    )}
+
+                    {/* 리뷰가 있을 때만 "리뷰 전체보기" 링크 표시 */}
+                    {previewReviews.length > 0 && (
+                        <div className="full-review-container">
+                            <Link 
+                                to={`/recipeReview?name=${encodeURIComponent(name)}`}  
+                                state={{ recipeId: recipeId, name: name, image_url: encodedImageUrl }} 
+                                className="view-full-review"
+                            >
+                                리뷰 전체보기 <span className="arrow">〉</span>
+                            </Link>
                         </div>
-                    ))}
-                    <div className="full-review-container">
-                        <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
-                    </div>
+                    )}
                 </div>
 
             </div>  

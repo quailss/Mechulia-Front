@@ -20,6 +20,7 @@ const Bookmark:React.FC = () => {
                     withCredentials: true,
 
                 });
+
                 setBookmark(response.data);
             } catch (error) {
 
@@ -40,12 +41,12 @@ const Bookmark:React.FC = () => {
                 {bookmark.map((bookmark, index) => (
                     <div key={index} className="bookmark-card"
                     onClick={() => {
-                        const encodedImageUrl = encodeURIComponent(bookmark.recipe.image_url);
-                        navigate(`/recipe?${bookmark.recipe.name}`, { state: { name: bookmark.recipe.name, id: bookmark.recipe.id, image_url: encodedImageUrl } });
+                        const encodedImageUrl = encodeURIComponent(bookmark.imgUrl);
+                        navigate(`/recipe?${bookmark.recipeName}`, { state: { name: bookmark.recipeName, id: bookmark.recipeId, image_url: encodedImageUrl } });
                     }}
                     >
-                        <img src={bookmark.recipe.image_url} className="bookmark-image" />
-                        <h3>{bookmark.recipe.name}</h3>
+                        <img src={bookmark.imgUrl} className="bookmark-image" />
+                        <h3>{bookmark.recipeName}</h3>
                     </div>
                 ))}
             </div>

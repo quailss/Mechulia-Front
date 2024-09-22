@@ -33,6 +33,7 @@ export const fetchRecipe = createAsyncThunk<
                 const jsonUrl = `http://openapi.foodsafetykorea.go.kr/api/b2bbfebcd5724db6990c/COOKRCP01/json/1/10/RCP_NM=${name}`;
                 const jsonResponse = await axios.get(jsonUrl);
 
+
                 if (jsonResponse.data && jsonResponse.data.COOKRCP01.row.length > 0) {
                     return jsonResponse.data.COOKRCP01.row[0]; // 첫 번째 레시피 반환
                 } else {
