@@ -36,7 +36,7 @@ const Theme: React.FC = () => {
 
     useEffect(() => {
         const fetchThemeRecipes = async () => {
-            const requestUrl = `http://localhost:8080/api/recipe/main/theme?keyword=${keyword}&page=${currentPage}`;
+            const requestUrl = `http://localhost:8080/api/recipes/main/theme?keyword=${keyword}&page=${currentPage}`;
             
             try {
                 const response = await axios.get(requestUrl);

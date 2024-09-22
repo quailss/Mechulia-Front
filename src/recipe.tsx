@@ -2,42 +2,39 @@ import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store/store';
 import { Provider } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import store from "./store/store";
 import { fetchRestaurants } from "./store/slices/restaurantSlice";
 import Navigation from "./components/nav";
 import SearchBar from "./components/searchBar";
 import { fetchRecipe, RecipeData } from "./store/slices/recipeSlice";
+import { fetchPreviewReviews, fetchReviews } from "./store/slices/reviewSlice";
 import './styles/recipe.css';
-import { FaStar, FaBookmark } from "react-icons/fa";
+import { FaStar, FaBookmark, FaStarHalfAlt } from "react-icons/fa";
 import Restaurant from "./components/restaurant";
 import axios from "axios";
 
-//별점 정의
-const StarRating = ({ averageRating = 0, reviewCount = 0 }) => {
-    const totalStars = 5;
+interface Member {
+    id: number;
+    name: string;
+    email: string;
+}
 
-    const renderStars = () => {
-        const stars = [];
-        for (let i = 1; i <= totalStars; i++) {
-            stars.push(
-                <FaStar
-                    key={i}
-                    color={i <= averageRating ? "#ffcc00" : "#dcdcdc"}
-                    size={18}
-                />
-            );
-        }
-        return stars;
-    };
+interface Recipe {
+    id: number;
+    name: string;
+    image_url: string;
+}
 
-    return (
-        <div className="star-rating">
-            <div className="stars">{renderStars()}</div>
-            <span className="review-count">({reviewCount})</span>
-        </div>
-    );
-};
+interface Review {
+    id: number;
+    content: string;
+    score: number;
+    createdAt: string;
+    member: Member;
+    recipe: Recipe;
+}
+
 
 const Recipe: React.FC = () => {
     const location = useLocation();
@@ -47,7 +44,7 @@ const Recipe: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Redux 상태 가져오기
-    const recipeData = useSelector((state: RootState) => state.recipe.data as RecipeData | null); // RecipeData 타입 적용
+    const recipeData = useSelector((state: RootState) => state.recipe.data as RecipeData | null); 
     const recipeLoading = useSelector((state: RootState) => state.recipe.loading);
     const recipeError = useSelector((state: RootState) => state.recipe.error);
 
@@ -62,6 +59,37 @@ const Recipe: React.FC = () => {
     const [hover, setHover] = useState<number | null>(null);
     const [review, setReview] = useState('');
     const [isButtonActive, setIsButtonActive] = useState(false); 
+
+    //평균 별점 상태
+    const averageScore = useSelector((state: RootState) => state.review.averageScore);
+    const allReviews = useSelector((state: RootState) => state.review.allReviews);
+    const averagereviewCount = allReviews.length;
+
+    //리뷰
+    const previewReviews = useSelector((state: RootState) => state.review.previewReviews as Review[]);
+    const reviewsStatus = useSelector((state: RootState) => state.review.status);
+
+    //평균 별점을 위해 전체 리뷰 렌더링 하기
+    useEffect(() => {
+        dispatch(fetchReviews(id)); 
+    }, [dispatch, id]);
+
+    // 별점 렌더링 로직
+    const totalStars = 5;
+    
+    const renderaverageStars = () => {
+        const stars = [];
+        for (let i = 1; i <= totalStars; i++) {
+            if (i <= Math.floor(averageScore)) {
+                stars.push(<FaStar key={i} color="#ffcc00" size={18} />);
+            } else if (i === Math.ceil(averageScore) && averageScore % 1 !== 0) {
+                stars.push(<FaStarHalfAlt key={i} color="#ffcc00" size={18} />);
+            } else {
+                stars.push(<FaStar key={i} color="#dcdcdc" size={18} />);
+            }
+        }
+        return stars;
+    };
 
     // 별점 선택 처리
     const handleStarClick = (value: number) => {
@@ -80,12 +108,11 @@ const Recipe: React.FC = () => {
 
         try {
             const reviewData = {
-                recipe_id: id,
                 score: rating,
                 content: review
             };
 
-            const response = await axios.post('http://localhost:8080/api/review', reviewData, {
+            const response = await axios.post(`http://localhost:8080/api/reviews/recipe/${recipeId}`, reviewData, {
                 withCredentials: true // 세션 정보를 포함하여 요청
             });
 
@@ -94,12 +121,41 @@ const Recipe: React.FC = () => {
                 setRating(0); 
                 setReview('');
                 setIsButtonActive(false);
+
+                //화면 최상단으로 이동
+                window.location.reload();
             }
         } catch(error) {
             alert('리뷰 저장에 실패했습니다.');
         }
     };
 
+    //리뷰 가져오기
+    useEffect(() => {
+        if (reviewsStatus === 'idle') {
+            dispatch(fetchPreviewReviews(recipeId));
+        }
+    }, [reviewsStatus, dispatch, recipeId]);
+
+    //점수에 따른 별 생성
+    const renderStars = (score: any) => {
+        const totalStars = 5;
+        const fullStars = Math.floor(score); // 정수 값만큼 노란색 별
+        const emptyStars = totalStars - fullStars; // 나머지는 회색 별
+
+        return (
+            <div>
+                {/* 노란색 별 */}
+                {Array(fullStars).fill('★').map((star, index) => (
+                    <span key={index} style={{ color: 'gold' }}>{star}</span>
+                ))}
+                {/* 회색 별 */}
+                {Array(emptyStars).fill('★').map((star, index) => (
+                    <span key={index} style={{ color: 'lightgray' }}>{star}</span>
+                ))}
+            </div>
+        );
+    };
 
     // 나중에 API로 별점 및 리뷰 개수 가져올 수 있도록 상태 추가
     const [averageRating, setAverageRating] = useState(0);
@@ -146,13 +202,12 @@ const Recipe: React.FC = () => {
     useEffect(() => {
         const fetchBookmarkStatus = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/bookmark/checked`, {
-                    params: {recipeId},
+                const response = await axios.get(`http://localhost:8080/api/bookmark/checked/${recipeId}`, {
                     withCredentials:true,
                 });
 
                 console.log("API Response:", response.data);
-                
+
                 setIsBookmarked(response.data);
                 setBookmarkId(response.data.bookmarkId); 
             } catch(error) {
@@ -169,14 +224,13 @@ const Recipe: React.FC = () => {
         try {
             if (isBookmarked) {
               // 북마크 삭제 요청
-              const response = await axios.delete(`http://localhost:8080/api/bookmark?bookmarkId=${bookmarkId}`, {
+              const response = await axios.delete(`http://localhost:8080/api/bookmark/${bookmarkId}`, {
                 withCredentials: true,
               });
               console.log("북마크 삭제 요청: ", response);
             } else {
               // 북마크 추가 요청
-              const response = await axios.post(`http://localhost:8080/api/bookmark`, null, {
-                params: { recipeId },
+              const response = await axios.post(`http://localhost:8080/api/bookmark/${recipeId}`, null, {
                 withCredentials: true,
               });
               setBookmarkId(response.data.bookmarkId);
@@ -211,7 +265,10 @@ const Recipe: React.FC = () => {
                     </div>
                     <div className="food-container">
                         <h1 className="food-name">{name}</h1>
-                        <StarRating averageRating={averageRating} reviewCount={reviewCount} />
+                        <div className="star-rating">
+                            <div className="stars">{renderaverageStars()}</div>
+                            <span className="review-count">({averagereviewCount})</span>
+                        </div>
                     </div>
                 </div>
                 <div className="how-to-make">
@@ -238,6 +295,23 @@ const Recipe: React.FC = () => {
                     </div>
                     <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
                     <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+
+                    <div className="reviews-container">
+                        {previewReviews.map((review) => (
+                            <div key={review.id} className="review-box">
+                                <div className="review-writer-container">
+                                    <p className="review-writer">{review.member.name} </p>
+                                    <p className="review-score">{renderStars(review.score)} </p>
+                                    <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
+                                </div>
+                                <p className="review-content"> {review.content} </p>
+                            </div>
+                        ))}
+                        <div className="full-review-container">
+                            <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div className="related-restaurant">
@@ -268,7 +342,10 @@ const Recipe: React.FC = () => {
                     </div>
                     <div className="food-container">
                         <h1 className="food-name">{name}</h1>
-                        <StarRating averageRating={averageRating} reviewCount={reviewCount} />
+                        <div className="star-rating">
+                            <div className="stars">{renderaverageStars()}</div>
+                            <span className="review-count">({averagereviewCount})</span>
+                        </div>
                     </div>
                 </div>
                 <div className="how-to-make">
@@ -295,6 +372,23 @@ const Recipe: React.FC = () => {
                     </div>
                     <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
                     <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+
+                    <div className="reviews-container">
+                        {previewReviews.map((review) => (
+                            <div key={review.id} className="review-box">
+                                <div className="review-writer-container">
+                                    <p className="review-writer">{review.member.name} </p>
+                                    <p className="review-score">{renderStars(review.score)} </p>
+                                    <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
+                                </div>
+                                <p className="review-content"> {review.content} </p>
+                            </div>
+                        ))}
+                        <div className="full-review-container">
+                            <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div className="related-restaurant">
@@ -331,7 +425,10 @@ const Recipe: React.FC = () => {
                 </div>
                 <div className="food-container">
                      <h1 className="food-name">{isExactMatch ? name : `비슷한 레시피: ${recipeData.RCP_NM}`}</h1>
-                     <StarRating averageRating={averageRating} reviewCount={reviewCount} />
+                        <div className="star-rating">
+                            <div className="stars">{renderaverageStars()}</div>
+                            <span className="review-count">({averagereviewCount})</span>
+                        </div>
                      <h2 className="required-materials"> 필요재료</h2>
                      <p>{recipeData.RCP_PARTS_DTLS}</p>
                      <h2 className="kcal">칼로리</h2>
@@ -367,6 +464,23 @@ const Recipe: React.FC = () => {
                 </div>
                 <textarea id="review" name="review" className="input-review" required placeholder="리뷰를 입력해주세요." value={review} onChange={handleReviewChange} />
                 <button className={`review-button ${isButtonActive ? 'active' : ''}`} disabled={!isButtonActive} onClick={handleSubmit}>작성하기</button>
+
+                <div className="reviews-container">
+                    {previewReviews.map((review) => (
+                        <div key={review.id} className="review-box">
+                            <div className="review-writer-container">
+                                <p className="review-writer">{review.member.name} </p>
+                                <p className="review-score">{renderStars(review.score)} </p>
+                                <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
+                            </div>
+                            <p className="review-content"> {review.content} </p>
+                        </div>
+                    ))}
+                    <div className="full-review-container">
+                        <Link to="/recipeReview" className="view-full-review">리뷰 전체보기 <span className="arrow">〉</span></Link>
+                    </div>
+                </div>
+
             </div>  
 
             <div className="related-restaurant">

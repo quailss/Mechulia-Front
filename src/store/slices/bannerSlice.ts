@@ -32,7 +32,7 @@ const initialState: BannerState = {
 export const fetchBannerRecipes = createAsyncThunk(
     'banner/fetchBannerRecipes',
     async () => {
-      const response = await axios.get<{ recipes: Recipes[] }>(`http://localhost:8080/api/recipe/main?page=4&size=15`);
+      const response = await axios.get<{ recipes: Recipes[] }>(`http://localhost:8080/api/recipes?page=4&size=15`);
       return response.data.recipes;
     }
   );

@@ -7,6 +7,7 @@ import Theme from "./theme";
 import Recipe from "./recipe";
 import FindAccount from "./findAccount";
 import Bookmark from "./bookmark";
+import RecipeReview from "./recipeReview";
 
 function AppRouter() {
     return (
@@ -18,6 +19,7 @@ function AppRouter() {
             <Route path="/recipe" element={<Recipe />} />
             <Route path="/findAccount" element={<FindAccount />} />
             <Route path="/bookmark" element={<Bookmark />} />
+            <Route path="/recipeReview" element={<RecipeReview />} />
         </Routes>
     );
 }

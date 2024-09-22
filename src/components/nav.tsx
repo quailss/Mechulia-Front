@@ -14,7 +14,7 @@ const Navigation = () => {
     useEffect(() => {
         const fetchSessionInfo = async() => {
             try {
-                const response = await axios.get('http://localhost:8080/api/auth/session-info', {
+                const response = await axios.get('http://localhost:8080/api/auth', {
                     withCredentials: true,
                 });
                 const data = response.data;

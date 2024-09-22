@@ -103,8 +103,49 @@
     border: none;
 }
 
+.reviews-container{
+    position: relative;
+    top: 80px;
+}
+
+.review-writer-container{
+    display: flex;
+    font-size: 20px;
+    margin-top: 30px;
+}
+
+.review-score{
+    margin-left: 15px;
+}
+
+.review-date{
+    margin-left: auto;
+    color: #999999;
+    font-size: 18px;
+}
+
+.review-content{
+    margin-top: 0px;
+}
+
+.full-review-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.view-full-review{
+    color: #999999;
+    text-decoration: none;
+    margin-top: 50px;
+}
+
+.view-full-review .arrow {
+    font-size: 15px;
+    margin-left: auto;
+  }
+
 /*음식점*/
 .related-restaurant{
     position: relative;
-    top: 400px;
+    top: 450px;
 }
