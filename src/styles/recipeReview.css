@@ -1,16 +1,4 @@
 .all-review {
     text-align: center;
-}
-
-.review-menu-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-.review-image{
-    width: 250px;
-    height: 250px;
-    border-radius: 8px;
+    font-size: 40px;
 }

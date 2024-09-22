@@ -23,6 +23,8 @@ export const fetchPreviewReviews = createAsyncThunk('reviews/fetchPreviewReviews
 // 전체 리뷰 데이터를 가져오는 Thunk
 export const fetchReviews = createAsyncThunk('reviews/fetchReviews', async (recipeId: string) => {
     const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}`);
+
+    console.log("전체 리뷰 데이터: ", response);
     return response.data; // 전체 데이터 반환
 });
 
