@@ -2,3 +2,14 @@
     text-align: center;
     font-size: 40px;
 }
+
+.averagescore-rating{
+    display: flex;
+}
+
+.averagescore-rating h2 {
+    position: relative;
+    top: -20px;
+    margin-right: 5px;
+    
+}

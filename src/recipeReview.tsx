@@ -1,9 +1,10 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useCallback} from "react";
 import Navigation from "./components/nav";
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { fetchReviews } from "./store/slices/reviewSlice";
 import { AppDispatch, RootState } from './store/store';
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import "./styles/recipeReview.css";
 
 interface Review {
@@ -24,12 +25,47 @@ const RecipeReview: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const allReviews = useSelector((state: RootState) => state.review.allReviews as Review[]);
-    const averagereviewCount = allReviews.length;
+    const reviewCount = useSelector((state: RootState) => state.review.reviewCount);
+    const averageScore = useSelector((state: RootState) => state.review.averageScore);
+    const page = useSelector((state: RootState) => state.review.page);
+    const hasMore = useSelector((state: RootState) => state.review.hasMore);
 
     //전체 리뷰 가져오기
     useEffect(() => {
-        dispatch(fetchReviews(recipeId)); 
-    }, [dispatch, recipeId]);
+        dispatch(fetchReviews({ recipeId, page }));
+    }, [dispatch, recipeId, page]);
+
+    // 별점 렌더링 로직
+    const totalStars = 5;
+
+    const renderaverageStars = () => {
+        const stars = [];
+        for (let i = 1; i <= totalStars; i++) {
+            if (i <= Math.floor(averageScore)) {
+                stars.push(<FaStar key={i} color="#ffcc00" size={18} />);
+            } else if (i === Math.ceil(averageScore) && averageScore % 1 !== 0) {
+                stars.push(<FaStarHalfAlt key={i} color="#ffcc00" size={18} />);
+            } else {
+                stars.push(<FaStar key={i} color="#dcdcdc" size={18} />);
+            }
+        }
+        return stars;
+    };
+
+    //무한 스크롤
+    const observer = useRef<IntersectionObserver | null>(null);
+    const lastReviewElementRef = useCallback(
+        (node: any) => {
+            if (observer.current) observer.current.disconnect();
+            observer.current = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && hasMore) {
+                    dispatch(fetchReviews({ recipeId, page: page + 1 }));
+                }
+            });
+            if (node) observer.current.observe(node);
+        },
+        [hasMore, dispatch, recipeId, page]
+    );
 
     // 이미지 URL을 디코딩하여 사용
     const decodedImageUrl = decodeURIComponent(image_url);
@@ -58,20 +94,39 @@ const RecipeReview: React.FC = () => {
         <div>
             <Navigation />
             <h1 className="all-review">Review </h1>
-            <h2>전체 리뷰 수: {averagereviewCount}</h2>
+            <h2>전체 리뷰 수: {reviewCount}</h2>
+            <div className="averagescore-rating">
+                <h2>평균 별점: </h2>
+                <div className="stars">{renderaverageStars()}</div>
+            </div>
 
             <div>
-                {allReviews.length > 0 ? (
-                    allReviews.map((review) => (
-                        <div key={review.id} className="review-box">
-                            <div className="review-writer-container">
-                                <p className="review-writer">{review.memberName} </p>
-                                <p className="review-score">{renderStars(review.score)} </p>
-                                <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
-                            </div>
-                            <p className="review-content"> {review.content} </p>
-                        </div>
-                    ))
+                {Array.isArray(allReviews) && allReviews.length > 0 ? (
+                    allReviews.map((review, index) => {
+                        if (index === allReviews.length - 1) {
+                            return (
+                                <div ref={lastReviewElementRef} key={review.id} className="review-box">
+                                    <div className="review-writer-container">
+                                        <p className="review-writer">{review.memberName}</p>
+                                        <p className="review-score">{renderStars(review.score)}</p>
+                                        <p className="review-date">{new Date(review.createdAt).toLocaleDateString()}</p>
+                                    </div>
+                                    <p className="review-content">{review.content}</p>
+                                </div>
+                            );
+                        } else {
+                            return (
+                                <div key={review.id} className="review-box">
+                                    <div className="review-writer-container">
+                                        <p className="review-writer">{review.memberName}</p>
+                                        <p className="review-score">{renderStars(review.score)}</p>
+                                        <p className="review-date">{new Date(review.createdAt).toLocaleDateString()}</p>
+                                    </div>
+                                    <p className="review-content">{review.content}</p>
+                                </div>
+                            );
+                        }
+                    })
                 ) : (
                     <p>리뷰가 없습니다.</p> // 리뷰가 없을 때 보여줄 내용
                 )}

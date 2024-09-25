@@ -17,16 +17,17 @@ interface Review {
 export const fetchPreviewReviews = createAsyncThunk('reviews/fetchPreviewReviews', async (recipeId: string) => {
     const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}`);
 
-    console.log("미리보기 리뷰 데이터: ", response);
     return response.data.reviews.slice(0, 3); // 3개만 반환
 });
 
 // 전체 리뷰 데이터를 가져오는 Thunk
-export const fetchReviews = createAsyncThunk('reviews/fetchReviews', async (recipeId: string) => {
-    const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}`);
-
-    return response.data; // 전체 데이터 반환
-});
+export const fetchReviews = createAsyncThunk(
+    'reviews/fetchReviews',
+    async ({ recipeId, page }: { recipeId: string, page: number }) => {
+        const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}?page=${page}&size=10`);
+        return response.data; // 전체 데이터 반환
+    }
+);
 
 const reviewsSlice = createSlice({
     name: 'reviews',
@@ -36,7 +37,9 @@ const reviewsSlice = createSlice({
         averageScore: 0, //평균 점수 저장
         reviewCount: 0,
         status: 'idle',
-        error: null as string | null
+        error: null as string | null,
+        page: 0,
+        hasMore: true,
     },
     reducers: {
         // 리뷰 초기화 액션
@@ -47,6 +50,8 @@ const reviewsSlice = createSlice({
             state.reviewCount = 0;
             state.status = 'idle';
             state.error = null;
+            state.page = 0;
+            state.hasMore = true;
         }
     },
     extraReducers: (builder) => {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store/store';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import { fetchRestaurants } from "./store/slices/restaurantSlice";
 import Navigation from "./components/nav";
 import SearchBar from "./components/searchBar";
@@ -41,6 +41,7 @@ const Recipe: React.FC = () => {
 
     //북마크
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [bookmarkId, setBookmarkId] = useState<number | null>(null); 
     const [loading, setLoading] = useState(false);
     const recipeId = id;
 
@@ -51,13 +52,14 @@ const Recipe: React.FC = () => {
     const [isButtonActive, setIsButtonActive] = useState(false); 
 
     //평균 별점 상태
+    const reviewCount = useSelector((state: RootState) => state.review.reviewCount);
     const averageScore = useSelector((state: RootState) => state.review.averageScore);
-    const allReviews = useSelector((state: RootState) => state.review.allReviews);
-    const averagereviewCount = allReviews.length;
 
     //리뷰
     const previewReviews = useSelector((state: RootState) => state.review.previewReviews as Review[]);
     const reviewsStatus = useSelector((state: RootState) => state.review.status);
+    const page = useSelector((state: RootState) => state.review.page);
+
 
 
     // 레시피 가져오기
@@ -69,8 +71,8 @@ const Recipe: React.FC = () => {
     
     //평균 별점을 위해 전체 리뷰 렌더링 하기
     useEffect(() => {
-        dispatch(fetchReviews(id)); 
-    }, [dispatch, id]);
+        dispatch(fetchReviews({ recipeId, page }));
+    }, [dispatch, recipeId, page]);
 
     // 별점 렌더링 로직
     const totalStars = 5;
@@ -181,11 +183,8 @@ const Recipe: React.FC = () => {
                     withCredentials:true,
                 });
 
-                console.log("API Response:", response.data);
-
                 setIsBookmarked(response.data);
             } catch(error) {
-                console.error("북마크 상태 오류: ", error);
             }
         };
 
@@ -201,24 +200,27 @@ const Recipe: React.FC = () => {
               const response = await axios.delete(`http://localhost:8080/api/bookmark/recipe/${recipeId}`, {
                 withCredentials: true,
               });
-              console.log("북마크 삭제 요청: ", response);
             } else {
               // 북마크 추가 요청
               const response = await axios.post(`http://localhost:8080/api/bookmark/${recipeId}`, null, {
                 withCredentials: true,
               });
-              console.log("북마크 추가: ", response);
 
             }
 
             setIsBookmarked(!isBookmarked);
         } catch (error: any) {
             // 인증 관련 오류 발생 시 로그인 페이지로 리다이렉트
-            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                console.log("로그인 해주세요.");
+            if (error.response && (error.response === 401 || error.response === 403)) {
                 navigate('/login'); 
+            } else if(error.rsponse === 303) {
+                const redirectUrl = error.response.headers.location;
+                if(redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
             } else {
-                console.error("북마크 처리 중 오류 발생:", error);
+                alert("로그인을 확인해주세요.");
+                navigate('/login'); 
             }
         } finally {
             setLoading(false);
@@ -248,7 +250,7 @@ const Recipe: React.FC = () => {
                         <h1 className="food-name">{name}</h1>
                         <div className="star-rating">
                             <div className="stars">{renderaverageStars()}</div>
-                            <span className="review-count">({averagereviewCount})</span>
+                            <span className="review-count">({reviewCount})</span>
                         </div>
                     </div>
                 </div>
@@ -339,7 +341,7 @@ const Recipe: React.FC = () => {
                         <h1 className="food-name">{name}</h1>
                         <div className="star-rating">
                             <div className="stars">{renderaverageStars()}</div>
-                            <span className="review-count">({averagereviewCount})</span>
+                            <span className="review-count">({reviewCount})</span>
                         </div>
                     </div>
                 </div>
@@ -436,7 +438,7 @@ const Recipe: React.FC = () => {
                      <h1 className="food-name">{isExactMatch ? name : `비슷한 레시피: ${recipeData.RCP_NM}`}</h1>
                         <div className="star-rating">
                             <div className="stars">{renderaverageStars()}</div>
-                            <span className="review-count">({averagereviewCount})</span>
+                            <span className="review-count">({reviewCount})</span>
                         </div>
                      <h2 className="required-materials"> 필요재료</h2>
                      <p>{recipeData.RCP_PARTS_DTLS}</p>

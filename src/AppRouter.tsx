@@ -8,6 +8,9 @@ import Recipe from "./recipe";
 import FindAccount from "./findAccount";
 import Bookmark from "./bookmark";
 import RecipeReview from "./recipeReview";
+import MyReviews from "./myReviews";
+import MyPage from "./myPage";
+import Search from "./search";
 
 function AppRouter() {
     return (
@@ -20,6 +23,9 @@ function AppRouter() {
             <Route path="/findAccount" element={<FindAccount />} />
             <Route path="/bookmark" element={<Bookmark />} />
             <Route path="/recipeReview" element={<RecipeReview />} />
+            <Route path="/myReviews" element={<MyReviews />} />
+            <Route path="/myPage" element={<MyPage />} />
+            <Route path="/search" element={<Search />} />
         </Routes>
     );
 }
