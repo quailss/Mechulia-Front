@@ -100,7 +100,7 @@ const RecipeReview: React.FC = () => {
                 <div className="stars">{renderaverageStars()}</div>
             </div>
 
-            <div>
+            <div className="all-review-container">
                 {Array.isArray(allReviews) && allReviews.length > 0 ? (
                     allReviews.map((review, index) => {
                         if (index === allReviews.length - 1) {
@@ -128,9 +128,11 @@ const RecipeReview: React.FC = () => {
                         }
                     })
                 ) : (
-                    <p>리뷰가 없습니다.</p> // 리뷰가 없을 때 보여줄 내용
+                    <p>리뷰가 없습니다.</p> 
                 )}
             </div>
+
+            <footer className="recipeReview-footer"></footer>
         </div>
     );
 };

@@ -13,3 +13,13 @@
     margin-right: 5px;
     
 }
+
+.all-review-container{
+    position: relative;
+    top: -40px;
+}
+
+/*footer*/
+.recipeReview-footer{
+    height: 100px;
+}
