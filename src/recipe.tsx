@@ -41,7 +41,6 @@ const Recipe: React.FC = () => {
 
     //북마크
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [bookmarkId, setBookmarkId] = useState<number | null>(null); 
     const [loading, setLoading] = useState(false);
     const recipeId = id;
 
