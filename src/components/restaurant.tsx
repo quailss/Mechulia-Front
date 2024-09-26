@@ -4,6 +4,7 @@ import { fetchRestaurants, nextSlide, prevSlide } from "../store/slices/restaura
 import '../styles/restaurant.css';
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { RootState, AppDispatch } from "../store/store";
+import { useNavigate } from 'react-router-dom';
 
 interface RestaurantProps {
   name?: string;
@@ -20,6 +21,8 @@ const useAppDispatch = () => useDispatch<AppDispatch>();
 const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
+    const navigate = useNavigate();
+
     const [selectedProvince, setSelectedProvince] = useState<string>('서울특별시');
     const [selectedCity, setSelectedCity] = useState<string>('종로구');
     const [cities, setCities] = useState<string[]>([]);
@@ -92,6 +95,25 @@ const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
       }
     };
 
+    const handleRestaurantClick = (restaurant: any) => {
+      // 음식점 클릭 시 상세 페이지로 이동
+      const encodedImageUrl = encodeURIComponent(restaurant.place_img); 
+      navigate(`/restaurant?${restaurant.place_name}`, {
+        state: {
+          id: restaurant.id,
+          place_name: restaurant.place_name,
+          place_img: encodedImageUrl,
+          x: restaurant.x,
+          y: restaurant.y,
+          address_name: restaurant.address_name,
+          road_address_name: restaurant.road_address_name,
+          phone: restaurant.phone,
+          place_url: restaurant.place_url,
+          
+        },
+      });
+    };
+
     return (
         <div>
           <div className="location-container">
@@ -139,6 +161,7 @@ const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
                   <div
                     key={restaurant.id}
                     className="restaurant-card"
+                    onClick={() => handleRestaurantClick(restaurant)}
                     style={{ width: slideWidth }}
                   >
                     {restaurant.place_img && <img src={restaurant.place_img} alt={restaurant.place_name} />}

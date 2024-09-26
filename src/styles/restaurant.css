@@ -72,7 +72,7 @@
 
 .slider-button {
     position: absolute;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     background: rgba(25, 25, 25, 0.8);
     font-size: 25px;

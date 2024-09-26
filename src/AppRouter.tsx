@@ -11,6 +11,7 @@ import RecipeReview from "./recipeReview";
 import MyReviews from "./myReviews";
 import MyPage from "./myPage";
 import Search from "./search";
+import DetailRestaurant from "./detailRestaurant";
 
 function AppRouter() {
     return (
@@ -26,6 +27,7 @@ function AppRouter() {
             <Route path="/myReviews" element={<MyReviews />} />
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/restaurant" element={<DetailRestaurant />} />
         </Routes>
     );
 }
