@@ -35,6 +35,16 @@ const RecipeReview: React.FC = () => {
         dispatch(fetchReviews({ recipeId, page }));
     }, [dispatch, recipeId, page]);
 
+    //엔터값 포함
+    const formatContentWithLineBreaks = (content: string) => {
+        return content.split('\n').map((line, index) => (
+          <span key={index}>
+            {line}
+            <br />
+          </span>
+        ));
+      };
+
     // 별점 렌더링 로직
     const totalStars = 5;
 
@@ -111,7 +121,7 @@ const RecipeReview: React.FC = () => {
                                         <p className="review-score">{renderStars(review.score)}</p>
                                         <p className="review-date">{new Date(review.createdAt).toLocaleDateString()}</p>
                                     </div>
-                                    <p className="review-content">{review.content}</p>
+                                    <p className="review-content">{formatContentWithLineBreaks(review.content)}</p>
                                 </div>
                             );
                         } else {
@@ -122,7 +132,7 @@ const RecipeReview: React.FC = () => {
                                         <p className="review-score">{renderStars(review.score)}</p>
                                         <p className="review-date">{new Date(review.createdAt).toLocaleDateString()}</p>
                                     </div>
-                                    <p className="review-content">{review.content}</p>
+                                    <p className="review-content">{formatContentWithLineBreaks(review.content)}</p>
                                 </div>
                             );
                         }

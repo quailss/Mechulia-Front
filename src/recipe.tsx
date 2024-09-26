@@ -142,6 +142,16 @@ const Recipe: React.FC = () => {
         }
     }, [reviewsStatus, dispatch, recipeId]);
 
+    //리뷰 엔터값 포함
+    const formatContentWithLineBreaks = (content: string) => {
+        return content.split('\n').map((line, index) => (
+          <span key={index}>
+            {line}
+            <br />
+          </span>
+        ));
+      };
+
     //점수에 따른 별 생성
     const renderStars = (score: any) => {
         const totalStars = 5;
@@ -288,7 +298,7 @@ const Recipe: React.FC = () => {
                                     <p className="review-score">{renderStars(review.score)} </p>
                                     <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
                                 </div>
-                                <p className="review-content"> {review.content} </p>
+                                <p className="review-content"> {formatContentWithLineBreaks(review.content)} </p>
                             </div>
                         ))
                     ) : (
@@ -379,7 +389,7 @@ const Recipe: React.FC = () => {
                                     <p className="review-score">{renderStars(review.score)} </p>
                                     <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
                                 </div>
-                                <p className="review-content"> {review.content} </p>
+                                <p className="review-content"> {formatContentWithLineBreaks(review.content)} </p>
                             </div>
                         ))
                     ) : (
@@ -485,7 +495,7 @@ const Recipe: React.FC = () => {
                                     <p className="review-score">{renderStars(review.score)} </p>
                                     <p className="review-date">{new Date(review.createdAt).toLocaleDateString()} </p>
                                 </div>
-                                <p className="review-content"> {review.content} </p>
+                                <p className="review-content"> {formatContentWithLineBreaks(review.content)} </p>
                             </div>
                         ))
                     ) : (
