@@ -1,10 +1,12 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import Navigation from "./components/nav";
 import "./styles/findAccount.css";
 import PopUp from './components/popup';
+import { useNavigate } from "react-router-dom";
 
 const FindAccount:React.FC = () => {
+    const navigate = useNavigate();
     //아이디 찾기
     const [username, setUsername] = useState('');
     const [userphone, setUserphone] = useState('');
@@ -63,6 +65,20 @@ const FindAccount:React.FC = () => {
     };
 
     //비밀번호 재설정
+    const handleChangePassword = async() => {
+      try {
+        const response = await axios.post('http://localhost:8080/api/auth/reset-password', {
+          email: user_name,
+          phoneNumber: user_phone,
+          password: resetpassword,
+        });
+        
+        alert("비밀번호 재설정이 완료됐습니다.")
+        navigate('/login');
+      } catch (error: any) {
+        alert("입력하신 정보가 맞는지 확인해주세요.");
+      }
+    };
 
     return(
         <div>
@@ -93,7 +109,7 @@ const FindAccount:React.FC = () => {
             <div className="reset-password-container">
                 <h1>비밀번호 재설정</h1>
                 <div>
-                    <label className="text-font">이름 </label>
+                    <label className="text-font">이메일 </label>
                     <input type="text" id="username" name="username" className="search-id" value={user_name} onChange={(e) => setUser_name(e.target.value)} required />
                 </div>
                 <div>
@@ -104,8 +120,9 @@ const FindAccount:React.FC = () => {
                     <label className="text-font">새로운 비밀번호 </label>
                     <input type="password" id="password" name="password" className="reset-password" value={resetpassword} onChange={(e) => setResetpassword(e.target.value)} required />
                 </div>
-
-                <button className={`reset-password-button ${isPasswordValid ? 'active' : ''}`}>비밀번호 재설정</button>
+            </div>
+            <div className="reset-button-container">
+              <button className={`reset-password-button ${isPasswordValid ? 'active' : ''}`} onClick={handleChangePassword}>비밀번호 재설정</button>
             </div>
 
             <footer className="footer"></footer>
