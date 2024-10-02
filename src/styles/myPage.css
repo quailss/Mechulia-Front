@@ -1,0 +1,77 @@
+.mypage-controller{
+    width: 50%;
+    margin: 0 auto;
+}
+
+.my-page{
+    position: relative;
+    text-align: center;
+    font-size: 40px;
+}
+
+.mypage-container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.mypage-label{
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    gap: 7px; 
+}
+
+.mypage-label p {
+    height: 30px;
+}
+
+.mypage-input {
+    display: flex;
+    flex-direction: column; 
+    gap: 35px; 
+    flex: 2; 
+}
+
+.mypage-input input{
+    width: 100%;
+    height: 30px;
+}
+
+/*마이페이지 버튼*/
+.mypage-button{
+    width: 70%;
+    margin: 0 auto;
+}
+
+.mypage-button-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 100%;
+}
+
+.withdraw-btn{
+    background-color: transparent;
+    border: none;
+    color: #999999;
+    border-bottom: 2px solid #999999;
+    cursor: pointer;
+}
+
+.update-btn{
+    padding: 7px 10px;
+    color: white;
+    background-color: rgb(64, 114, 252);
+    border-radius: 5px;
+    border: none;
+}
+
+.withdraw-btn:hover {
+    color: rgb(64, 114, 252);
+    border-bottom: 2px solid rgb(64, 114, 252);
+}
+
+.update-btn:hover {
+    background-color: rgb(13, 44, 131);
+}
