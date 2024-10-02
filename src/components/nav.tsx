@@ -36,10 +36,23 @@ const Navigation = () => {
         fetchSessionInfo();
     }, []);
 
-    //로그아웃 핸들러
+    // 로그아웃 핸들러
     const handleLogout = () => {
-        localStorage.removeItem('token');
-        window.location.reload();
+        fetch('http://localhost:8080/api/auth/logout', {
+            method: 'GET',
+            credentials: 'include', 
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('로그아웃 되었습니다.');
+                window.location.reload(); 
+            } else {
+                console.error('로그아웃 실패');
+            }
+        })
+        .catch(error => {
+            console.error('로그아웃 중 오류 발생:', error);
+        });
     };
 
     //드롭다운
@@ -59,8 +72,8 @@ const Navigation = () => {
                         {isDropdownOpen && (
                         <ul className="dropdown-menu">
                             <li><Link to="/bookmark">즐겨찾기</Link></li>
-                            <li><Link to="/reviews">내가 쓴 리뷰</Link></li>
-                            <li><Link to="/profile">내 정보관리</Link></li>
+                            <li><Link to="/myReviews">내가 쓴 리뷰</Link></li>
+                            <li><Link to="/myPage">내 정보관리</Link></li>
                         </ul>
                         )}
                     </div>
