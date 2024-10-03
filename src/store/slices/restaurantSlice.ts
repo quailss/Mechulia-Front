@@ -45,7 +45,7 @@ const fetchPlaceId = async (x: string, y: string, placeName: string) => {
       key: process.env.REACT_APP_GOOGLE_API_KEY, 
     };
 
-    const response = await axios.get('/api/google/maps/api/place/nearbysearch/json', { params });
+    const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', { params });
     const results = response.data.results;
 
     if (results.length > 0) {
