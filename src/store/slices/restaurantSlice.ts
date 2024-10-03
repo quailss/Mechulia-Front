@@ -35,21 +35,17 @@ const imageCache: { [key: string]: string | null } = {};
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // 구글 Places API로 place_id 가져오기
-const fetchPlaceId = async (x: string, y: string, placeName: string) => {
+const fetchPlaceId = async (x: string, y: string, placeName: string): Promise<string | null> => {
   try {
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    const targetUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json`;
-
-    const params = {
-      location: `${y},${x}`,
-      radius: 500,
-      keyword: placeName,
-      type: "restaurant",
-      key: process.env.REACT_APP_GOOGLE_API_KEY,
-    };
-
-    // CORS 프록시 사용
-    const response = await axios.get(proxyUrl + targetUrl, { params });
+    // Netlify Functions를 통해 Google API 요청
+    const response = await axios.get('/.netlify/functions/fetch-google', {
+      params: {
+        location: `${y},${x}`,
+        radius: 500,
+        keyword: placeName,
+        type: "restaurant",
+      },
+    });
     const results = response.data.results;
 
     if (results.length > 0) {
@@ -65,26 +61,21 @@ const fetchPlaceId = async (x: string, y: string, placeName: string) => {
 };
 
 
-
 // 구글 Places API로 이미지 URL 가져오기
-const fetchPlacePhoto = async (placeId: string) => {
+const fetchPlacePhoto = async (placeId: string): Promise<string | null> => {
   try {
-    const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-    const targetUrl = `https://maps.googleapis.com/maps/api/place/details/json`;
-
-    const params = {
-      place_id: placeId,
-      key: process.env.REACT_APP_GOOGLE_API_KEY,
-    };
-
-    // CORS 프록시 사용
-    const response = await axios.get(proxyUrl + targetUrl, { params });
+    // Netlify Functions를 통해 Google API 요청
+    const response = await axios.get('/.netlify/functions/fetch-google-photo', {
+      params: {
+        place_id: placeId,
+      },
+    });
     const result = response.data.result;
 
     if (result.photos && result.photos.length > 0) {
       const photoReference = result.photos[0].photo_reference;
       // 실제 사진 URL 생성
-      const photoUrl = `${proxyUrl}https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
+      const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photoReference}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`;
       return photoUrl;
     } else {
       console.log("사진이 없습니다.");
@@ -95,6 +86,7 @@ const fetchPlacePhoto = async (placeId: string) => {
     return null;
   }
 };
+
 
 
 // 음식점 정보와 이미지 가져오기 (캐시 기능 및 딜레이 추가)
