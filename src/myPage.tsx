@@ -8,6 +8,7 @@ const MyPage:React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [memberInfo, setMemberInfo] = useState({
         email: '',
+        password: '',
         name: '',
         phoneNumber: '',
         birthday: ''
@@ -29,6 +30,7 @@ const MyPage:React.FC = () => {
                 setMemberInfo({
                     email: data.email || '',
                     name: data.name || '',
+                    password: data.password || '',
                     phoneNumber: data.phoneNumber || '',
                     birthday: data.birthday || ''
                 });
@@ -63,6 +65,26 @@ const MyPage:React.FC = () => {
         }
     };
 
+    //회원 정보 수정
+    const handleUpdateMemberInfo = () => {
+        //비밀번호 입력 여부에 따라 전달값 설정
+        const updateMemberInfo = {
+            ...memberInfo,
+            password: memberInfo.password ? memberInfo.password : ' ',
+        };
+
+        //회원정보 수정 API 호출
+        axios.put('http://localhost:8080/api/auth/profile/Memberinformation', updateMemberInfo)
+        .then(response => {
+            alert('회원정보가 수정되었습니다.');
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('회원정보 수정 실패: ', error);
+            alert('회원정보 수정에 실패했습니다.');
+        });
+    };
+
     return (
         <div>
             <Navigation />
@@ -83,6 +105,8 @@ const MyPage:React.FC = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 id="password"
                                 name="password"
+                                value={memberInfo.password || ''}
+                                onChange={(e) => setMemberInfo({ ...memberInfo, password: e.target.value })}
                                 required
                             />
                             <span
@@ -115,14 +139,20 @@ const MyPage:React.FC = () => {
                                 maxLength={12}
                                 required
                         />
-                        <input type="text" id="birthday" name="birthday" value={memberInfo.birthday} onChange={(e) => setMemberInfo({ ...memberInfo, birthday: e.target.value })} maxLength={8} required />
+                        <input 
+                            type="text" 
+                            id="birthday" 
+                            name="birthday" 
+                            value={memberInfo.birthday} onChange={(e) => setMemberInfo({ ...memberInfo, birthday: e.target.value })} 
+                            maxLength={8} 
+                            required />
                     </div>
                 </div>
             </div>
             <div className="mypage-button">
                 <div className="mypage-button-container">
                     <button className="withdraw-btn" onClick={handleDelete}>회원탈퇴</button>
-                    <button className="update-btn">업데이트</button>
+                    <button className="update-btn" onClick={handleUpdateMemberInfo}>업데이트</button>
                 </div>
             </div>
         </div>
