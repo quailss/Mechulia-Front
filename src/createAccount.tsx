@@ -1,10 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
-import { Provider } from "react-redux";
-import store from "./store/store";
 import Navigation from "./components/nav";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import "./styles/createAccount.css"
 
 const CreateAccount: React.FC = () => {
@@ -204,6 +201,7 @@ const CreateAccount: React.FC = () => {
 
     return (
         <div className="wrapper">
+            <Navigation />
             <div className="management-container">
                 <div className="register-container">
                     <h2 className="register-title">회원가입</h2>

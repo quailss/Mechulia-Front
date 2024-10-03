@@ -83,8 +83,8 @@ const RecipeReview: React.FC = () => {
     //점수에 따른 별 생성
     const renderStars = (score: any) => {
         const totalStars = 5;
-        const fullStars = Math.floor(score); // 정수 값만큼 노란색 별
-        const emptyStars = totalStars - fullStars; // 나머지는 회색 별
+        const fullStars = Math.floor(score); 
+        const emptyStars = totalStars - fullStars; 
 
         return (
             <div>

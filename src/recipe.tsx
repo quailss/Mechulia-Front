@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from './store/store';
-import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { fetchRestaurants } from "./store/slices/restaurantSlice";
 import Navigation from "./components/nav";
 import SearchBar from "./components/searchBar";
@@ -41,7 +41,6 @@ const Recipe: React.FC = () => {
 
     //북마크
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [bookmarkId, setBookmarkId] = useState<number | null>(null); 
     const [loading, setLoading] = useState(false);
     const recipeId = id;
 
@@ -155,8 +154,8 @@ const Recipe: React.FC = () => {
     //점수에 따른 별 생성
     const renderStars = (score: any) => {
         const totalStars = 5;
-        const fullStars = Math.floor(score); // 정수 값만큼 노란색 별
-        const emptyStars = totalStars - fullStars; // 나머지는 회색 별
+        const fullStars = Math.floor(score);
+        const emptyStars = totalStars - fullStars;
 
         return (
             <div>

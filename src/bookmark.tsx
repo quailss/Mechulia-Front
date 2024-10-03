@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "./components/nav";
 import SearchBar from "./components/searchBar";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import './styles/bookmark.css';
-import { IoBookmarkSharp } from "react-icons/io5";
 
 const Bookmark:React.FC = () => {
     const [bookmark, setBookmark] = useState<any[]>([]);
-
-    const location = useLocation();
     const navigate = useNavigate();
 
     //북마크된 레시피 가져오기
