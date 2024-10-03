@@ -171,7 +171,7 @@ const MyReviews: React.FC = () => {
                 <div key={review.id} className="review-box">
                 <div className="my-review-container">
                   <div className="review-left">
-                    <img src={review.imgUrl} className="my-review-image"></img>
+                    <img src={review.imgUrl} alt="리뷰 이미지" className="my-review-image"></img>
                     <p>{review.recipeName}</p>
                   </div>
                   <div className="review-right">

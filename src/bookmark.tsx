@@ -42,7 +42,7 @@ const Bookmark:React.FC = () => {
                         navigate(`/recipe?${bookmark.recipeName}`, { state: { name: bookmark.recipeName, id: bookmark.recipeId, image_url: encodedImageUrl } });
                     }}
                     >
-                        <img src={bookmark.imgUrl} className="bookmark-image" />
+                        <img src={bookmark.imgUrl} alt="북마크한 음식 이미지" className="bookmark-image" />
                         <h3>{bookmark.recipeName}</h3>
                     </div>
                 ))}
