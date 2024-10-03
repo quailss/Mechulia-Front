@@ -95,13 +95,15 @@ const FindAccount:React.FC = () => {
                 </div>
                 <button className={`find-id-button ${isFormValid ? 'active' : ''}`}  disabled={!isFormValid} onClick={handleFindId}>아이디 찾기</button>
                 {/*팝업창*/}
-                <PopUp isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                    {email ? (
-                    <p>{email}</p>
-                    ) : (
-                    <p style={{ color: 'red' }}>{errorMessage}</p>
-                    )}
-                </PopUp>
+                <div className="popup-wrapper">
+                  <PopUp isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                      {email ? (
+                          <p>{email}</p>
+                      ) : (
+                          <p style={{ color: 'red' }}>{errorMessage}</p>
+                      )}
+                  </PopUp>
+              </div>
             </div>
 
             <hr className="id-password-divider"></hr>

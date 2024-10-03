@@ -92,3 +92,11 @@ cursor: not-allowed;
     margin-bottom: 50px;
 }
 
+/*팝업창*/
+.popup-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
