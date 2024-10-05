@@ -186,8 +186,6 @@ const CreateAccount: React.FC = () => {
                     }
                 }
             );
-
-            console.log("보낸 url: ", response);
             
             if (response.data) {
                 alert('회원가입 성공!');
