@@ -4,6 +4,8 @@ import axios from 'axios';
 import "../styles/nav.css";
 
 const Navigation = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const [loggedIn, setLoggedIn] = useState(false);
     const [nickname, setNickname] = useState('');
     const [email, setEmail] = useState('');
@@ -14,7 +16,7 @@ const Navigation = () => {
     useEffect(() => {
         const fetchSessionInfo = async() => {
             try {
-                const response = await axios.get('http://localhost:8080/api/auth', {
+                const response = await axios.get(`${API_URL}/api/auth`, {
                     withCredentials: true,
                 });
                 const data = response.data;
@@ -38,7 +40,7 @@ const Navigation = () => {
 
     // 로그아웃 핸들러
     const handleLogout = () => {
-        fetch('http://localhost:8080/api/auth/logout', {
+        fetch(`${API_URL}/api/auth/logout`, {
             method: 'GET',
             credentials: 'include', 
         })

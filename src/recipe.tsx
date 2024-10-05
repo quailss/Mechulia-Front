@@ -24,6 +24,8 @@ interface Review {
 }
 
 const Recipe: React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+    
     const location = useLocation();
     const navigate = useNavigate();
     const { id, name, image_url } = location.state;
@@ -111,7 +113,7 @@ const Recipe: React.FC = () => {
                 content: review
             };
 
-            const response = await axios.post(`http://localhost:8080/api/reviews/recipe/${recipeId}`, reviewData, {
+            const response = await axios.post(`${API_URL}/api/reviews/recipe/${recipeId}`, reviewData, {
                 withCredentials: true // 세션 정보를 포함하여 요청
             });
 
@@ -125,7 +127,8 @@ const Recipe: React.FC = () => {
                 window.location.reload();
             }
         } catch(error) {
-            alert('리뷰 저장에 실패했습니다.');
+            alert('리뷰 저장에 실패했습니다. 로그인을 확인해 주세요');
+            navigate('/login'); 
         }
     };
 
@@ -188,7 +191,7 @@ const Recipe: React.FC = () => {
     useEffect(() => {
         const fetchBookmarkStatus = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/bookmark/checked/${recipeId}`, {
+                const response = await axios.get(`${API_URL}/api/bookmark/checked/${recipeId}`, {
                     withCredentials:true,
                 });
 
@@ -206,12 +209,12 @@ const Recipe: React.FC = () => {
         try {
             if (isBookmarked) {
               // 북마크 삭제 요청
-              const response = await axios.delete(`http://localhost:8080/api/bookmark/recipe/${recipeId}`, {
+              const response = await axios.delete(`${API_URL}/api/bookmark/recipe/${recipeId}`, {
                 withCredentials: true,
               });
             } else {
               // 북마크 추가 요청
-              const response = await axios.post(`http://localhost:8080/api/bookmark/${recipeId}`, null, {
+              const response = await axios.post(`${API_URL}/api/bookmark/${recipeId}`, null, {
                 withCredentials: true,
               });
 

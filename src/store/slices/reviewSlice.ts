@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 interface Review {
     id: number;
     content: string;
@@ -15,7 +17,7 @@ interface Review {
 
 // 3개의 리뷰 데이터만 가져오는 Thunk
 export const fetchPreviewReviews = createAsyncThunk('reviews/fetchPreviewReviews', async (recipeId: string) => {
-    const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}`);
+    const response = await axios.get(`${API_URL}/api/reviews/recipe/${recipeId}`);
 
     return response.data.reviews.slice(0, 3); // 3개만 반환
 });
@@ -24,7 +26,7 @@ export const fetchPreviewReviews = createAsyncThunk('reviews/fetchPreviewReviews
 export const fetchReviews = createAsyncThunk(
     'reviews/fetchReviews',
     async ({ recipeId, page }: { recipeId: string, page: number }) => {
-        const response = await axios.get(`http://localhost:8080/api/reviews/recipe/${recipeId}?page=${page}&size=10`);
+        const response = await axios.get(`${API_URL}/api/reviews/recipe/${recipeId}?page=${page}&size=10`);
         return response.data; // 전체 데이터 반환
     }
 );

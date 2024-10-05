@@ -6,6 +6,8 @@ import PopUp from './components/popup';
 import { useNavigate } from "react-router-dom";
 
 const FindAccount:React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const navigate = useNavigate();
     //아이디 찾기
     const [username, setUsername] = useState('');
@@ -30,7 +32,7 @@ const FindAccount:React.FC = () => {
     const handleFindId = async () => {
         try {
           // 입력한 이름과 전화번호로 POST 요청
-          const response = await axios.post('http://localhost:8080/api/auth/find-id', {
+          const response = await axios.post(`${API_URL}/api/auth/find-id`, {
             name: username,
             phoneNumber: userphone,
           });
@@ -67,7 +69,7 @@ const FindAccount:React.FC = () => {
     //비밀번호 재설정
     const handleChangePassword = async() => {
       try {
-        const response = await axios.post('http://localhost:8080/api/auth/reset-password', {
+        const response = await axios.post(`${API_URL}/api/auth/reset-password`, {
           email: user_name,
           phoneNumber: user_phone,
           password: resetpassword,

@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Recipes 인터페이스 정의
 interface Recipes {
   id: string;
@@ -41,8 +43,8 @@ export const fetchRecipes = createAsyncThunk(
     try {
       // menu_id가 존재하면 URL에 포함, 없으면 제외
       const url = menu_id 
-        ? `http://localhost:8080/api/recipes/category/${menu_id}?page=${page}&size=15`
-        : `http://localhost:8080/api/recipes?page=${page}&size=15`;
+        ? `${API_URL}/api/recipes/category/${menu_id}?page=${page}&size=15`
+        : `${API_URL}/api/recipes?page=${page}&size=15`;
 
       const response = await axios.get(url);
 

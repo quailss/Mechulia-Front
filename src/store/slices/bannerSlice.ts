@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Recipes 인터페이스 정의
 interface Recipes {
   id: string;
@@ -32,7 +34,7 @@ const initialState: BannerState = {
 export const fetchBannerRecipes = createAsyncThunk(
     'banner/fetchBannerRecipes',
     async () => {
-      const response = await axios.get<{ recipes: Recipes[] }>(`http://localhost:8080/api/recipes?page=4&size=15`);
+      const response = await axios.get<{ recipes: Recipes[] }>(`http://43.202.239.244/api/recipes?page=4&size=15`);
       return response.data.recipes;
     }
   );

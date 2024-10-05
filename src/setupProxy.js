@@ -2,6 +2,7 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
+  const API_URL = process.env.REACT_APP_API_URL;
   //네이버 API 프록시 설정
   app.use(
     '/api/naver',
@@ -29,7 +30,7 @@ module.exports = function(app) {
   app.use(
     '/oauth2',
     createProxyMiddleware({
-      target: 'http://localhost:8080',
+      target: `${API_URL}`,
       changeOrigin: true,
       secure: false,
       // CORS 요청에 대한 설정

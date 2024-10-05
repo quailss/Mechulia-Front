@@ -20,6 +20,8 @@ interface Slide {
 }
 
 const Theme: React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const location = useLocation();
     const params = new URLSearchParams(location.search);
     const keyword = params.get("keyword");
@@ -36,7 +38,7 @@ const Theme: React.FC = () => {
 
     useEffect(() => {
         const fetchThemeRecipes = async () => {
-            const requestUrl = `http://localhost:8080/api/recipes/theme?keyword=${keyword}&page=${currentPage}`;
+            const requestUrl = `${API_URL}/api/recipes/theme?keyword=${keyword}&page=${currentPage}`;
             
             try {
                 const response = await axios.get(requestUrl);

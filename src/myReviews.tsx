@@ -4,6 +4,8 @@ import axios from "axios";
 import "./styles/myReviews.css";
 
 const MyReviews: React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const [reviews, setReviews] = useState<Review[]>([]); 
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,7 +34,7 @@ const MyReviews: React.FC = () => {
     useEffect(() => {
       const fetchMyReviews = async () => {
         try {
-          const response = await axios.get("http://localhost:8080/api/reviews/member", {
+          const response = await axios.get(`${API_URL}/api/reviews/member`, {
             withCredentials: true, 
           });
 
@@ -124,7 +126,7 @@ const MyReviews: React.FC = () => {
     const handleSaveClick = async (reviewId: number) => {
         try {
           const response = await axios.put(
-            `http://localhost:8080/api/reviews/${reviewId}`,
+            `${API_URL}/api/reviews/${reviewId}`,
             { content: editContent, score: editScore }, 
             { withCredentials: true } 
           );
@@ -149,7 +151,7 @@ const MyReviews: React.FC = () => {
     const handleDeleteClick = async (reviewId: number) => {
         if (window.confirm("정말로 이 리뷰를 삭제하시겠습니까?")) {
         try {
-            await axios.delete(`http://localhost:8080/api/reviews/${reviewId}`, {
+            await axios.delete(`${API_URL}/api/reviews/${reviewId}`, {
             withCredentials: true, 
             });
             setReviews(reviews.filter((review) => review.id !== reviewId));

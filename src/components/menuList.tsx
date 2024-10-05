@@ -23,6 +23,7 @@ interface ThemeRecipe {
 }
 
 const RecipeList = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   // useDispatch를 사용하되, AppDispatch로 타입 지정
   const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
@@ -45,8 +46,8 @@ const RecipeList = () => {
 
     // 디버깅용 URL 콘솔 출력
     const url = menuId !== undefined
-      ? `http://localhost:8080/api/recipes/category/${menuId}?page=${page}&size=15`
-      : `http://localhost:8080/api/recipes?page=${page}&size=15`;
+      ? `${API_URL}/api/recipes/category/${menuId}?page=${page}&size=15`
+      : `${API_URL}/api/recipes?page=${page}&size=15`;
   }, [dispatch, page, menuId]);
 
   // 페이지 변경 함수

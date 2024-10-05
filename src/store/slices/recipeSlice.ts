@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const FOOD_API_KEY = process.env.REACT_APP_RECIPE_API_KEY;
+const BASE_URL = process.env.REACT_APP_API_RECIPE_BASE_URL;
+
 // RecipeData 인터페이스 정의
 export interface RecipeData {
     RCP_NM: string; // 레시피 이름
@@ -21,7 +24,7 @@ export const fetchRecipe = createAsyncThunk<
     async (name, { rejectWithValue }) => {
         try {
             // XML 형식으로 첫 번째 API 요청
-            const xmlUrl = `http://openapi.foodsafetykorea.go.kr/api/b2bbfebcd5724db6990c/COOKRCP01/xml/1/10/RCP_NM=${name}`;
+            const xmlUrl = `${BASE_URL}/api/${FOOD_API_KEY}/COOKRCP01/xml/1/10/RCP_NM=${name}`;
             const xmlResponse = await axios.get(xmlUrl);
             
             const parser = new DOMParser();
@@ -30,7 +33,7 @@ export const fetchRecipe = createAsyncThunk<
 
             // total_count가 0이면 JSON 요청을 시도
             if (totalCount === '0') {
-                const jsonUrl = `http://openapi.foodsafetykorea.go.kr/api/b2bbfebcd5724db6990c/COOKRCP01/json/1/10/RCP_NM=${name}`;
+                const jsonUrl = `${BASE_URL}/api/${FOOD_API_KEY}/COOKRCP01/json/1/10/RCP_NM=${name}`;
                 const jsonResponse = await axios.get(jsonUrl);
 
 

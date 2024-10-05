@@ -6,6 +6,8 @@ import axios from "axios";
 import "./styles/search.css";
 
 const Search: React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const [keyword, setKeyword] = useState(''); 
@@ -39,7 +41,7 @@ const Search: React.FC = () => {
 
         try {
             setLoading(true); // 로딩 시작
-            const response = await axios.get(`http://localhost:8080/api/recipes/search`, {
+            const response = await axios.get(`${API_URL}/api/recipes/search`, {
                 params: {
                     menuId: 0, // 적절한 menuId로 설정
                     keyword: keyword,

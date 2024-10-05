@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import "./styles/createAccount.css"
 
 const CreateAccount: React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const [email, setEmail] = useState("");
     const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
     const [name, setName] = useState('');
@@ -46,7 +48,7 @@ const CreateAccount: React.FC = () => {
     // 이메일 중복 확인 요청 핸들러
     const handleEmailCheck = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/api/auth/check-email", { email });
+            const response = await axios.post(`${API_URL}/api/auth/check-email`, { email });
             console.log("응답 데이터:", response.data);
             if (response.data === true) {
                 setIsEmailValid(true);
@@ -176,7 +178,7 @@ const CreateAccount: React.FC = () => {
             console.log("보내는 데이터: ", userData);
             // Axios를 사용하여 POST 요청 보내기
             const response = await axios.post(
-                'http://localhost:8080/api/auth/register',
+                `${API_URL}/api/auth/register`,
                 userData,
                 {
                     headers: {

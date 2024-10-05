@@ -8,9 +8,11 @@ import axios from 'axios';
 
 const Login: React.FC = () => {
 
+    const API_URL = process.env.REACT_APP_API_URL;
+
     //카카오, 네이버 로그인
-    const KAKAO_AUTH_URL = "http://localhost:8080/oauth2/authorization/kakao";
-    const NAVER_AUTH_URL = "http://localhost:8080/oauth2/authorization/naver";
+    const KAKAO_AUTH_URL = `${API_URL}/oauth2/authorization/kakao`;
+    const NAVER_AUTH_URL = `${API_URL}/oauth2/authorization/naver`;
 
     const handleKakaoLogin = () => {
         window.location.href = KAKAO_AUTH_URL; 
@@ -59,7 +61,7 @@ const Login: React.FC = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', loginData, {
+            const response = await axios.post(`${API_URL}/api/auth/login`, loginData, {
                 headers: {
                     'Content-Type': 'application/json'
                 },

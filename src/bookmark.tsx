@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import './styles/bookmark.css';
 
 const Bookmark:React.FC = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+
     const [bookmark, setBookmark] = useState<any[]>([]);
     const navigate = useNavigate();
 
@@ -13,7 +15,7 @@ const Bookmark:React.FC = () => {
     useEffect(() => {
         const fetchBookmarks = async () => {
             try {
-                const response = await axios.get("http://localhost:8080/api/bookmark/member", {
+                const response = await axios.get(`${API_URL}/api/bookmark/member`, {
                     withCredentials: true,
 
                 });
