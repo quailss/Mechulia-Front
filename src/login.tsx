@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                 // 세션이 저장될 시간을 확보하기 위해 약간의 지연 추가
                 setTimeout(() => {
                     window.location.href = '/'; 
-                }, 200)
+                }, 500)
             } else {
                 alert('로그인 실패!');
             }

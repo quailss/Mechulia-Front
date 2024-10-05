@@ -1,11 +1,14 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 import Navigation from "./components/nav";
+import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import "./styles/createAccount.css"
 
 const CreateAccount: React.FC = () => {
     const API_URL = process.env.REACT_APP_API_URL;
+
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [isEmailValid, setIsEmailValid] = useState<boolean | null>(null);
@@ -189,7 +192,7 @@ const CreateAccount: React.FC = () => {
             
             if (response.data) {
                 alert('회원가입 성공!');
-                window.location.href = '/login';
+                navigate('/login');
             } else {
                 alert('회원가입 실패: ' + response.data.message);
             }
