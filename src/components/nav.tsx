@@ -19,6 +19,7 @@ const Navigation = () => {
                 withCredentials: true,
             });
             const data = response.data;
+            console.log("세션 정보: ", data);
 
             if (data.loggedIn) {
                 setLoggedIn(true);
@@ -43,8 +44,6 @@ const Navigation = () => {
                 });
                 const data = response.data;
 
-                console.log("세션 정보: ", data);
-                
                 if(data.loggedIn) {
                     setLoggedIn(true);
                     setNickname(data.nickname);
