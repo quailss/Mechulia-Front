@@ -12,6 +12,28 @@ const Navigation = () => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+    //세션 정보 확인(후에 삭제)
+    const fetchSessionInfo = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/auth`, {
+                withCredentials: true,
+            });
+            const data = response.data;
+
+            if (data.loggedIn) {
+                setLoggedIn(true);
+                setNickname(data.nickname);
+                setEmail(data.email);
+
+                console.log("이메일: ", data.email);
+            } else {
+                setLoggedIn(false);
+            }
+        } catch (error) {
+            console.error("세션 정보를 가져오는 중 오류 발생: ", error);
+        }
+    };
+
     //세션에서 정보 가져오기
     useEffect(() => {
         const fetchSessionInfo = async() => {
@@ -21,6 +43,8 @@ const Navigation = () => {
                 });
                 const data = response.data;
 
+                console.log("세션 정보: ", data);
+                
                 if(data.loggedIn) {
                     setLoggedIn(true);
                     setNickname(data.nickname);
@@ -85,6 +109,7 @@ const Navigation = () => {
                 <div>
                     <Link to="/login" className="login">로그인</Link>
                     <Link to="/createAccount" className="membership">회원가입</Link>
+                    <button onClick={fetchSessionInfo}>세션 확인</button>
                 </div>
             )}
         </nav>
