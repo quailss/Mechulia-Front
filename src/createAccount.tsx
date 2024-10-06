@@ -178,7 +178,6 @@ const CreateAccount: React.FC = () => {
         };
     
         try {
-            console.log("보내는 데이터: ", userData);
             // Axios를 사용하여 POST 요청 보내기
             const response = await axios.post(
                 `${API_URL}/api/auth/register`,

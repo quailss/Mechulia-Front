@@ -6,36 +6,36 @@ const BASE_URL = process.env.REACT_APP_API_RECIPE_BASE_URL;
 
 // RecipeData 인터페이스 정의
 export interface RecipeData {
-    RCP_NM: string; // 레시피 이름
-    RCP_WAY2: string; // 조리 방법
-    RCP_PARTS_DTLS: string; // 재료 정보
-    INFO_ENG: string; // 칼로리 정보
-    ATT_FILE_NO_MAIN?: string; // 선택적 속성 (메인 이미지)
-    manuals: { step: string; img?: string }[]; // 만드는 방법과 이미지 배열
+    RCP_NM: string;
+    RCP_WAY2: string; 
+    RCP_PARTS_DTLS: string;
+    INFO_ENG: string; 
+    ATT_FILE_NO_MAIN?: string; 
+    manuals: { step: string; img?: string }[];
 }
 
 // API 호출하여 레시피 데이터 가져오는 Thunk
 export const fetchRecipe = createAsyncThunk<
-    RecipeData, // Thunk의 반환 타입은 RecipeData
-    string,     // 인자로 name을 전달받음
+    RecipeData, 
+    string,    
     { rejectValue: string }
 >(
     'recipe/fetchRecipe',
     async (name, { rejectWithValue }) => {
         try {
-            // XML 형식으로 첫 번째 API 요청
-            const xmlUrl = `${BASE_URL}/api/${FOOD_API_KEY}/COOKRCP01/xml/1/10/RCP_NM=${name}`;
+            // Netlify Functions을 사용해 XML 형식으로 첫 번째 API 요청
+            const xmlUrl = `/.netlify/functions/fetchRecipe?endpoint=${FOOD_API_KEY}/COOKRCP01&name=${name}`;
             const xmlResponse = await axios.get(xmlUrl);
-            
+
+            // XML 응답 파싱
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(xmlResponse.data, "application/xml");
             const totalCount = xmlDoc.getElementsByTagName("total_count")[0]?.textContent;
 
             // total_count가 0이면 JSON 요청을 시도
             if (totalCount === '0') {
-                const jsonUrl = `${BASE_URL}/api/${FOOD_API_KEY}/COOKRCP01/json/1/10/RCP_NM=${name}`;
+                const jsonUrl = `/.netlify/functions/fetchRecipe?endpoint=${FOOD_API_KEY}/COOKRCP01/json&name=${name}`;
                 const jsonResponse = await axios.get(jsonUrl);
-
 
                 if (jsonResponse.data && jsonResponse.data.COOKRCP01.row.length > 0) {
                     return jsonResponse.data.COOKRCP01.row[0]; // 첫 번째 레시피 반환
@@ -53,7 +53,7 @@ export const fetchRecipe = createAsyncThunk<
                         return { step: manual, img: manualImg || undefined };
                     }
                     return null;
-                }).filter(item => item !== null); // null 값은 제거
+                }).filter(item => item !== null); 
 
                 const parsedRecipe: RecipeData = {
                     RCP_NM: firstRow.getElementsByTagName("RCP_NM")[0]?.textContent || "",
@@ -61,7 +61,7 @@ export const fetchRecipe = createAsyncThunk<
                     RCP_PARTS_DTLS: firstRow.getElementsByTagName("RCP_PARTS_DTLS")[0]?.textContent || "",
                     INFO_ENG: firstRow.getElementsByTagName("INFO_ENG")[0]?.textContent || "",
                     ATT_FILE_NO_MAIN: firstRow.getElementsByTagName("ATT_FILE_NO_MAIN")[0]?.textContent || "",
-                    manuals: manuals as { step: string; img?: string }[], // 직렬화 가능한 데이터로 변환
+                    manuals: manuals as { step: string; img?: string }[],
                 };
 
                 return parsedRecipe;
@@ -75,11 +75,12 @@ export const fetchRecipe = createAsyncThunk<
     }
 );
 
+
 // recipeSlice 생성
 const recipeSlice = createSlice({
     name: 'recipe',
     initialState: {
-        data: null as RecipeData | null, // RecipeData 타입을 명시적으로 지정
+        data: null as RecipeData | null,
         error: null as string | null,
         loading: false,
     },
@@ -92,7 +93,7 @@ const recipeSlice = createSlice({
             })
             .addCase(fetchRecipe.fulfilled, (state, action) => {
                 state.loading = false;
-                state.data = action.payload; // RecipeData 타입이므로 안전하게 처리 가능
+                state.data = action.payload; 
             })
             .addCase(fetchRecipe.rejected, (state, action) => {
                 state.loading = false;
