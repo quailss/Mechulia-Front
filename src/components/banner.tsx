@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { RootState, AppDispatch } from "../store/store";
-import { useSelector } from "react-redux";
-import { useDispatch, TypedUseSelectorHook } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { fetchBannerRecipes } from "../store/slices/bannerSlice";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../styles/banner.css"; // 스타일 파일은 필요에 맞게 수정
-import { Link } from "react-router-dom";
-
-interface ThemeRecipe {
-  name: string;
-  image_url: string;
-  id: number;
-}
+import { Helmet } from "react-helmet";
+import "../styles/banner.css"; 
 
 // 5개의 랜덤 레시피를 선택하는 함수
 function getRandomRecipes(recipes: any[]) {
@@ -41,6 +34,17 @@ const Banner = () => {
           setRandomRecipes(randomSelection);
         }
       }, [bannerRecipes]);
+
+    // 첫 번째 이미지를 미리 로드
+    useEffect(() => {
+      if (randomRecipes.length > 0) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = randomRecipes[0].image_url.replace(/\.(jpg|jpeg|png)$/, ".webp"); // WebP 형식 사용 시
+        document.head.appendChild(link);
+      }
+    }, [randomRecipes]);
   
     // 5초마다 이미지 변경
     useEffect(() => {
@@ -61,10 +65,34 @@ const Banner = () => {
     const currentRecipe = bannerRecipes[currentIndex];
   
     return (
+      <>
+      {/* Helmet을 사용해 preload 설정 */}
+      {randomRecipes.length > 0 && (
+        <Helmet>
+          <link
+            rel="preload"
+            as="image"
+            href={randomRecipes[0].image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")}
+          />
+        </Helmet>
+      )}
+
       <div className="banner-container">
         {bannerRecipes.length > 0 && (
           <div className="banner-item">
-            <img src={bannerRecipes[currentIndex].image_url} alt={bannerRecipes[currentIndex].name} className="banner-image" />
+              <picture>
+                {/* WebP 이미지 형식 제공 */}
+                <source
+                  srcSet={bannerRecipes[currentIndex].image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")}
+                  type="image/webp"
+                />
+                {/* 기본 이미지 형식 제공 */}
+                <img
+                  src={bannerRecipes[currentIndex].image_url}
+                  alt={bannerRecipes[currentIndex].name}
+                  className="banner-image"
+                />
+              </picture>
             <div className="inner-item">
                 <h3 className="banner-name">{bannerRecipes[currentIndex].name}</h3>
                 <div className="banner-counter">
@@ -86,6 +114,7 @@ const Banner = () => {
           </div>
         )}
       </div>
+      </>
     );
   };
 export default Banner;

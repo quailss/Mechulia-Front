@@ -6,7 +6,6 @@ import { fetchRecipes, setMenuId } from "../store/slices/menuSlice";
 import { setCategory  } from "../store/slices/categorySlice";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
-const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 const Category: React.FC = () => {
     //선택 옵션

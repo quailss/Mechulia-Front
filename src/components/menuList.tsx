@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchRecipes } from '../store/slices/menuSlice';
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState, AppDispatch } from "../store/store";
@@ -16,21 +16,12 @@ interface Recipes {
   menu: string;
 }
 
-interface ThemeRecipe {
-  name: string;
-  image_url: string;
-  id: number;
-}
-
 const RecipeList = () => {
   const API_URL = process.env.REACT_APP_API_URL;
-  // useDispatch를 사용하되, AppDispatch로 타입 지정
   const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
   const navigate = useNavigate();
 
-  // Redux에서 menuId와 recipes 관련 상태 가져오기
   const { recipes, status, error, totalElements, menuId } = useSelector((state: RootState) => state.menu);
 
   const [page, setPage] = useState(0);
@@ -39,9 +30,9 @@ const RecipeList = () => {
   useEffect(() => {
     // 카테고리가 선택된 상태이면 카테고리별 API 요청, 그렇지 않으면 기본 API 요청
     if (menuId !== undefined) {
-      dispatch(fetchRecipes({ page, menu_id: menuId })); // 카테고리별 API 요청
+      dispatch(fetchRecipes({ page, menu_id: menuId })); 
     } else {
-      dispatch(fetchRecipes({ page })); // 기본 API 요청
+      dispatch(fetchRecipes({ page })); 
     }
 
     // 디버깅용 URL 콘솔 출력
@@ -53,7 +44,7 @@ const RecipeList = () => {
   // 페이지 변경 함수
   const handlePageChange = (newPage: number) => {
     console.log("Page clicked:", newPage);
-    setPage(newPage); // 페이지 상태 업데이트
+    setPage(newPage);
   };
 
   return (
@@ -67,9 +58,12 @@ const RecipeList = () => {
               <li className="menu-item" key={recipe.id} onClick={() => {
                 const encodedImageUrl = encodeURIComponent(recipe.image_url);
                 navigate(`/recipe?${recipe.name}`, { state: { name: recipe.name, id: recipe.id, image_url: encodedImageUrl } });
-            }}//클릭하면 레시피 페이지로 이동
+            }}
             >
-                <img src={recipe.image_url} className='menu-image' alt={recipe.name} />
+                <picture>
+                  <source srcSet={recipe.image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")} type="image/webp" />
+                  <img src={recipe.image_url} className="menu-image" alt={recipe.name} loading="lazy" />
+                </picture>
                 <h2 className='recipe-name'>{recipe.name}</h2>
               </li>
             ))}

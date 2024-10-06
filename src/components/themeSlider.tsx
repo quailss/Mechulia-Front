@@ -11,9 +11,6 @@ interface Slide {
 }
 
 const ThemeSlider: React.FC = () => {
-    const dispatch = useDispatch();
-    const currentIndex = useSelector((state: RootState) => state.slider.currentIndex);
-
     const slides: Slide[] = [
         { src: "https://github.com/quailss/image-data/blob/main/meat-1155132_1280.jpg?raw=true", text: "오늘은 고기파티!", keyword:"육류" },
         { src: "https://github.com/quailss/image-data/blob/main/spicy.jpg?raw=true", text: "매콤한 한방이 필요해", keyword:"매운 맛" },
