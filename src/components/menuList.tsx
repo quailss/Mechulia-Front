@@ -59,12 +59,7 @@ const RecipeList = () => {
                 navigate(`/recipe?${recipe.name}`, { state: { name: recipe.name, id: recipe.id, image_url: encodedImageUrl } });
             }}
             >
-                <picture>
-                  {/* WebP 형식 제공 */}
-                  <source srcSet={recipe.image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")} type="image/webp" />
-                  {/* 기본 형식 제공 */}
-                  <img src={recipe.image_url} className='menu-image' alt="음식 이미지" />
-                </picture>
+                <img src={recipe.image_url} className='menu-image' alt="음식 이미지" loading="lazy" />
                 <h2 className='recipe-name'>{recipe.name}</h2>
               </li>
             ))}

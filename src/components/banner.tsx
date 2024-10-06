@@ -64,16 +64,7 @@ const Banner = () => {
       <div className="banner-container">
         {bannerRecipes.length > 0 && (
           <div className="banner-item">
-            <picture>
-              {/* WebP 형식을 우선적으로 제공 */}
-              <source srcSet={bannerRecipes[currentIndex].image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")} type="image/webp" />
-              {/* 기본 이미지 형식 제공 */}
-              <img
-                src={bannerRecipes[currentIndex].image_url}
-                alt={bannerRecipes[currentIndex].name}
-                className="banner-image"
-              />
-            </picture>
+            <img src={bannerRecipes[currentIndex].image_url} alt={bannerRecipes[currentIndex].name} className="banner-image" loading="lazy" />
             <div className="inner-item">
                 <h3 className="banner-name">{bannerRecipes[currentIndex].name}</h3>
                 <div className="banner-counter">
