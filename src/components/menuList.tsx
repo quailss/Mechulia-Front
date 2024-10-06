@@ -43,7 +43,6 @@ const RecipeList = () => {
 
   // 페이지 변경 함수
   const handlePageChange = (newPage: number) => {
-    console.log("Page clicked:", newPage);
     setPage(newPage);
   };
 
@@ -60,10 +59,7 @@ const RecipeList = () => {
                 navigate(`/recipe?${recipe.name}`, { state: { name: recipe.name, id: recipe.id, image_url: encodedImageUrl } });
             }}
             >
-                <picture>
-                  <source srcSet={recipe.image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")} type="image/webp" />
-                  <img src={recipe.image_url} className="menu-image" alt={recipe.name} loading="lazy" />
-                </picture>
+                <img src={recipe.image_url} className='menu-image' alt={recipe.name} />
                 <h2 className='recipe-name'>{recipe.name}</h2>
               </li>
             ))}

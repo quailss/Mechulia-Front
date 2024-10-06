@@ -42,7 +42,6 @@ const Theme: React.FC = () => {
             
             try {
                 const response = await axios.get(requestUrl);
-                console.log('API Response:', response.data);
 
                 setRecipes(response.data.recipes || []);
                 
