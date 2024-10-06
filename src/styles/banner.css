@@ -24,6 +24,7 @@
     border-radius: 12px;
     filter: brightness(0.7);
     z-index: 500;
+    object-fit: cover;
 }
 
 .inner-item{

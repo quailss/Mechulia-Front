@@ -118,7 +118,8 @@ const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
         <div>
           <div className="location-container">
             <div className="location-dropdown">
-              <select value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
+            <label htmlFor="province-select">지역을 선택하세요</label>
+              <select id="province-select" value={selectedProvince} onChange={(e) => setSelectedProvince(e.target.value)}>
                 <option value="">선택하세요</option>
                 {Object.keys(locations).map((province) => (
                   <option key={province} value={province}>
@@ -128,7 +129,9 @@ const LocationSelector: React.FC<RestaurantProps> = ({ name }) => {
               </select>
             </div>
             <div className="location-dropdown">
+            <label htmlFor="city-select">도시를 선택하세요</label>
               <select
+                id="city-select"
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
                 disabled={!selectedProvince}

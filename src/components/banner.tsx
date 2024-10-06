@@ -32,13 +32,20 @@ const Banner = () => {
         if (bannerRecipes.length > 0) {
           const randomSelection = getRandomRecipes(bannerRecipes);
           setRandomRecipes(randomSelection);
+
+          // 첫 번째 이미지 미리 로드
+          const link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'image';
+          link.href = randomSelection[0].image_url;
+          document.head.appendChild(link);
         }
       }, [bannerRecipes]);
   
     // 5초마다 이미지 변경
     useEffect(() => {
         const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % randomRecipes.length); // randomRecipes로 변경
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % randomRecipes.length); 
         }, 5000);
         return () => clearInterval(interval);
     }, [randomRecipes]); 
@@ -57,7 +64,16 @@ const Banner = () => {
       <div className="banner-container">
         {bannerRecipes.length > 0 && (
           <div className="banner-item">
-            <img src={bannerRecipes[currentIndex].image_url} alt={bannerRecipes[currentIndex].name} className="banner-image" />
+            <picture>
+              {/* WebP 형식을 우선적으로 제공 */}
+              <source srcSet={bannerRecipes[currentIndex].image_url.replace(/\.(jpg|jpeg|png)$/, ".webp")} type="image/webp" />
+              {/* 기본 이미지 형식 제공 */}
+              <img
+                src={bannerRecipes[currentIndex].image_url}
+                alt={bannerRecipes[currentIndex].name}
+                className="banner-image"
+              />
+            </picture>
             <div className="inner-item">
                 <h3 className="banner-name">{bannerRecipes[currentIndex].name}</h3>
                 <div className="banner-counter">
