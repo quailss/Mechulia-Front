@@ -12,7 +12,7 @@ import MyReviews from "./myReviews";
 import MyPage from "./myPage";
 import Search from "./search";
 import DetailRestaurant from "./detailRestaurant";
-import NotFound from './notFound';
+import NotFound from "./notFound";
 
 function AppRouter() {
     return (
