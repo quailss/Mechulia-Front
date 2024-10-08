@@ -73,6 +73,13 @@ const Theme: React.FC = () => {
         };
     }, []);
 
+    useEffect(() => {
+        // 404 페이지가 발생한 경우 메인 페이지로 리다이렉트
+        if (location.pathname === "/404") {
+          navigate("/", { replace: true });
+        }
+      }, [location, navigate]);
+
     if (loading) {
         return <div>Loading...</div>;
     }
