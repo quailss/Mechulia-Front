@@ -124,7 +124,7 @@ const Recipe: React.FC = () => {
                 setIsButtonActive(false);
 
                 //새로고침
-                navigate(0);
+                dispatch(fetchReviews({ recipeId, page }));
             }
         } catch(error) {
             alert('리뷰 저장에 실패했습니다. 로그인을 확인해 주세요');
