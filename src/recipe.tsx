@@ -123,8 +123,8 @@ const Recipe: React.FC = () => {
                 setReview('');
                 setIsButtonActive(false);
 
-                //화면 최상단으로 이동
-                window.location.reload();
+                //새로고침
+                navigate(0);
             }
         } catch(error) {
             alert('리뷰 저장에 실패했습니다. 로그인을 확인해 주세요');
@@ -228,7 +228,7 @@ const Recipe: React.FC = () => {
             } else if(error.rsponse === 303) {
                 const redirectUrl = error.response.headers.location;
                 if(redirectUrl) {
-                    window.location.href = redirectUrl;
+                    navigate(redirectUrl);
                 }
             } else {
                 alert("로그인을 확인해주세요.");

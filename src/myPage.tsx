@@ -2,9 +2,11 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Navigation from "./components/nav";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useNavigate } from "react-router-dom";
 import "./styles/myPage.css";
 
 const MyPage:React.FC = () => {
+    const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
 
     const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +60,6 @@ const MyPage:React.FC = () => {
                 const response = await axios.get(`${API_URL}/api/auth/profile`, {
                     withCredentials: true,
                 });
-                console.log('가져오는 정보: ', response);
                 const data = response.data;
                 setMemberInfo({
                     email: data.email || '',
@@ -87,7 +88,7 @@ const MyPage:React.FC = () => {
             .then(response => {
                 if (response.ok) {
                     alert("회원탈퇴가 완료되었습니다.");
-                    window.location.href = "/";
+                    navigate('/');
                 } else {
                     alert("회원 탈퇴에 실패하였습니다. 다시 시도해주세요.");
                 }
@@ -116,7 +117,7 @@ const MyPage:React.FC = () => {
         .then(response => {
             console.log('서버 응답: ', response);
             alert('회원정보가 수정되었습니다.');
-            window.location.reload();
+            navigate(0);
         })
         .catch(error => {
             console.error('회원정보 수정 실패: ', error);

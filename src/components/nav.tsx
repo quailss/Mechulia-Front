@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/nav.css";
 
 const Navigation = () => {
     const API_URL = process.env.REACT_APP_API_URL;
+    const navigate = useNavigate();
 
     const [loggedIn, setLoggedIn] = useState(false);
     const [nickname, setNickname] = useState('');
@@ -26,7 +27,6 @@ const Navigation = () => {
                     setNickname(data.nickname);
                     setEmail(data.email);
 
-                    console.log("이메일: ", setEmail);
                 } else {
                     setLoggedIn(false);
                 }
@@ -47,7 +47,7 @@ const Navigation = () => {
         .then(response => {
             if (response.ok) {
                 alert('로그아웃 되었습니다.');
-                window.location.href = "/";
+                navigate('/');
             } else {
                 console.error('로그아웃 실패');
             }
