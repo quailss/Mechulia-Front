@@ -36,27 +36,42 @@ const Theme: React.FC = () => {
     const [currentSlideIndex, setCurrentSlideIndex] = useState(0); 
     const slidesPerPage = 4;
 
+    // 테마별 레시피 API 호출
+    const fetchThemeRecipes = async () => {
+        if (!keyword) return;
+
+        setLoading(true);
+        const requestUrl = `${API_URL}/api/recipes/theme?keyword=${keyword}&page=${currentPage}`;
+        try {
+            const response = await axios.get(requestUrl);
+
+            setRecipes(response.data.recipes || []);
+            const totalElements = response.data.totalElements || 0;
+            setTotalPages(Math.ceil(totalElements / 15));
+            setLoading(false);
+        } catch (err) {
+            setLoading(false);
+        }
+    };
+
+    // 페이지 로드 시, 새로고침 시, 키워드 변경 시마다 API 호출
     useEffect(() => {
-        const fetchThemeRecipes = async () => {
-            const requestUrl = `${API_URL}/api/recipes/theme?keyword=${keyword}&page=${currentPage}`;
-            
-            try {
-                const response = await axios.get(requestUrl);
-
-                setRecipes(response.data.recipes || []);
-                
-                // totalPages 계산
-                const totalElements = response.data.totalElements || 0;
-                setTotalPages(Math.ceil(totalElements / 15)); 
-
-                setLoading(false);
-                } catch (error) {
-                    setLoading(false);
-                }
-            };
-
         fetchThemeRecipes();
     }, [keyword, currentPage]);
+
+    // 새로고침 시 데이터 다시 요청
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            fetchThemeRecipes();
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>;
