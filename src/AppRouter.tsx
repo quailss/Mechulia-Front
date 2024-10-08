@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Main from "./main";
 import Login from "./login";
 import CreateAccount from "./createAccount";
@@ -29,7 +29,7 @@ function AppRouter() {
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/search" element={<Search />} />
             <Route path="/restaurant" element={<DetailRestaurant />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
 }
