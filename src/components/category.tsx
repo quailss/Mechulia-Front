@@ -26,12 +26,14 @@ const Category: React.FC = () => {
     const handleSelect = (option: string) => {
         setSelected(option);
         const selectedMenuId = categoryToMenuId[option];
+
+        //그 외 선택 처리
+        const categoryForAPI = option === "그 외" ? "아시안" : option;
         
         //선택한 메뉴 id redux에 저장
         dispatch(setMenuId(selectedMenuId));
         dispatch(fetchRecipes({ page: 0, menu_id: selectedMenuId }));
-        dispatch(setCategory(option));
-        console.log(`선택된 카테고리: ${option}, menuId: ${selectedMenuId}`);
+        dispatch(setCategory(categoryForAPI));
       };
 
     return (
