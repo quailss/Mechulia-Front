@@ -15,9 +15,12 @@ const categorySlice = createSlice({
     setCategory: (state, action: PayloadAction<string>) => {
       state.selectedCategory = action.payload;  // 카테고리 업데이트
     },
+    resetCategory: (state) => {
+      state.selectedCategory = null;
+    },
   },
 });
 
-export const { setCategory } = categorySlice.actions;
+export const { setCategory, resetCategory } = categorySlice.actions;
 
 export default categorySlice.reducer;

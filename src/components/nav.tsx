@@ -2,6 +2,12 @@ import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/nav.css";
+import { RootState, AppDispatch } from "../store/store";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { resetCategory } from '../store/slices/categorySlice';
+
+const useAppDispatch = () => useDispatch<AppDispatch>();
+const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const Navigation = () => {
     const API_URL = process.env.REACT_APP_API_URL;
@@ -12,6 +18,7 @@ const Navigation = () => {
     const [email, setEmail] = useState('');
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dispatch = useAppDispatch();
 
     //세션에서 정보 가져오기
     useEffect(() => {
@@ -62,9 +69,15 @@ const Navigation = () => {
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+    // 로고 클릭 시 카테고리 초기화 및 메인 페이지 이동
+    const handleLogoClick = () => {
+        dispatch(resetCategory());
+        navigate('/'); 
+    };
+
     return (
         <nav className="nav-container">
-            <Link to="/" className="logo-title">메추리아</Link>
+            <Link to="/" className="logo-title" onClick={handleLogoClick}>메추리아</Link>
             {loggedIn ? (
                 <div className="login-nav">
                     <div className="nav-dropdown">
