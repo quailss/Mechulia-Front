@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import { RootState, AppDispatch } from "../store/store";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { useDispatch } from "react-redux";
 import "../styles/category.css";
 import { fetchRecipes, setMenuId } from "../store/slices/menuSlice";
-import { setCategory  } from "../store/slices/categorySlice";
+import { setCategory, resetCategory } from "../store/slices/categorySlice";
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
 
@@ -22,6 +22,11 @@ const Category: React.FC = () => {
     const [selected, setSelected] = useState<string | undefined>();
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(resetCategory());
+        setSelected(undefined);  // 로컬 상태 초기화
+    }, [dispatch]);
 
     const handleSelect = (option: string) => {
         setSelected(option);
