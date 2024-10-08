@@ -54,27 +54,27 @@ const MyPage:React.FC = () => {
     };
 
     //멤버 정보 가져오기
-    useEffect(() => {
-        const fetchMemberInfo = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/api/auth/profile`, {
-                    withCredentials: true,
-                });
-                const data = response.data;
-                setMemberInfo({
-                    email: data.email || '',
-                    name: data.name || '',
-                    password: data.password || '',
-                    phoneNumber: data.phoneNumber || '',
-                    birthday: data.birthday || '',
-                    provider: data.provider || '',
-                });
-            } catch (error) {
-                console.error('회원 정보를 가져오는 중 오류 발생:', error);
-            }
-        };
+    const fetchMemberInfo = async (dispatchMemberInfoUpdate: (info: any) => void) => {
+        try {
+            const response = await axios.get(`${API_URL}/api/auth/profile`, {
+                withCredentials: true,
+            });
+            const data = response.data;
+            dispatchMemberInfoUpdate({
+                email: data.email || '',
+                name: data.name || '',
+                password: data.password || '',
+                phoneNumber: data.phoneNumber || '',
+                birthday: data.birthday || '',
+                provider: data.provider || '',
+            });
+        } catch (error) {
+            console.error('회원 정보를 가져오는 중 오류 발생:', error);
+        }
+    };
 
-        fetchMemberInfo();
+    useEffect(() => {
+        fetchMemberInfo(setMemberInfo); 
     }, []);
 
     //회원 정보 탈퇴
@@ -109,15 +109,13 @@ const MyPage:React.FC = () => {
             ...restMemberInfo,
             password: memberInfo.password ? memberInfo.password : "",
         };
-
-        console.log('보내는 회원 정보:', updateMemberInfo);
         
         //회원정보 수정 API 호출
         axios.put(`${API_URL}/api/auth/profile/Memberinformation`, updateMemberInfo)
         .then(response => {
             console.log('서버 응답: ', response);
             alert('회원정보가 수정되었습니다.');
-            navigate(0);
+            fetchMemberInfo(setMemberInfo);
         })
         .catch(error => {
             console.error('회원정보 수정 실패: ', error);
