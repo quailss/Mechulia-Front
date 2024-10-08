@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Main from "./main";
 import Login from "./login";
 import CreateAccount from "./createAccount";
@@ -12,6 +12,7 @@ import MyReviews from "./myReviews";
 import MyPage from "./myPage";
 import Search from "./search";
 import DetailRestaurant from "./detailRestaurant";
+import NotFound from './notFound';
 
 function AppRouter() {
     return (
@@ -28,6 +29,7 @@ function AppRouter() {
             <Route path="/myPage" element={<MyPage />} />
             <Route path="/search" element={<Search />} />
             <Route path="/restaurant" element={<DetailRestaurant />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
