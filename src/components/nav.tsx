@@ -4,7 +4,7 @@ import axios from 'axios';
 import "../styles/nav.css";
 import { AppDispatch } from "../store/store";
 import { useDispatch } from "react-redux";
-import { resetCategory } from '../store/slices/categorySlice';
+import { setCategory, resetCategory } from '../store/slices/categorySlice';
 import { setMenuId } from '../store/slices/menuSlice';
 import { fetchRecipes } from '../store/slices/menuSlice';
 
@@ -75,6 +75,7 @@ const Navigation = () => {
         dispatch(resetCategory());
         dispatch(setMenuId(undefined)); 
         dispatch(fetchRecipes({ page: 0 })); 
+        dispatch(setCategory(null));
         navigate('/'); 
     };
 

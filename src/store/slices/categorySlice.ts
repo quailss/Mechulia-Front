@@ -12,7 +12,7 @@ const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    setCategory: (state, action: PayloadAction<string>) => {
+    setCategory: (state, action: PayloadAction<string | null>) => {
       state.selectedCategory = action.payload;  // 카테고리 업데이트
     },
     resetCategory: (state) => {
