@@ -215,7 +215,7 @@ const CreateAccount: React.FC = () => {
                 <div className="inner-container">
                     <div>
                         <label className="email">이메일</label>
-                        <input type="text" id="useremail" name="useremail" className="input-email" value={email} onChange={handleEmailChange} required />
+                        <input type="text" id="useremail" name="useremail" className="input-email" value={email} onChange={handleEmailChange} autoComplete="off" required />
                         <button className={`email-check ${email ? 'active' : ''}`} disabled={!email} onClick={handleEmailCheck}>중복확인</button>
                         {errors.email && <p className="error-text">{errors.email}</p>}
                     </div>
@@ -234,6 +234,7 @@ const CreateAccount: React.FC = () => {
                             value={password}
                             onChange={handlePasswordChange}
                             style={{ paddingRight: '30px' }}
+                            autoComplete="new-password"
                         />
                         <span
                             onClick={togglePasswordVisibility}

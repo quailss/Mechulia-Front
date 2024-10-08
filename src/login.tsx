@@ -95,7 +95,7 @@ const Login: React.FC = () => {
             <div className="login-page">
                 <h2 className="title">메추리아</h2>
                 <div className="login-container">
-                    <input type="text" id="username" name="username" className="input-id" required placeholder="아이디 입력" value={username} onChange={handleUsernameChange} onKeyDown={handleKeyDown} />
+                    <input type="text" id="username" name="username" className="input-id" required placeholder="아이디 입력" value={username} onChange={handleUsernameChange} onKeyDown={handleKeyDown} autoComplete="off" />
                     <div style={{ position: 'relative', display: 'inline-block' }}>
                     <input
                         type={showPassword ? 'text' : 'password'} // 비밀번호 표시 상태에 따라 타입 변경
@@ -108,6 +108,7 @@ const Login: React.FC = () => {
                         onChange={handlePasswordChange}
                         onKeyDown={handleKeyDown}
                         style={{ paddingRight: '30px' }} 
+                        autoComplete="new-password"
                     />
                     <span
                         onClick={togglePasswordVisibility}
