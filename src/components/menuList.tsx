@@ -4,6 +4,7 @@ import { fetchRecipes } from '../store/slices/menuSlice';
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState, AppDispatch } from "../store/store";
 import "../styles/menuList.css";
+import { convertToWebP } from "../utils/imageUtils";
 
 interface Recipes {
   id: string;
@@ -21,6 +22,7 @@ const RecipeList = () => {
   const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+  const [convertedImages, setConvertedImages] = useState<string[]>([]);
 
   const { recipes, status, error, totalElements, menuId } = useSelector((state: RootState) => state.menu);
 
@@ -41,6 +43,21 @@ const RecipeList = () => {
       : `${API_URL}/api/recipes?page=${page}&size=15`;
   }, [dispatch, page, menuId]);
 
+    // 레시피 이미지 WebP 변환
+    useEffect(() => {
+      const convertImagesToWebP = async () => {
+        if (recipes && Array.isArray(recipes.content)) {
+          const converted = await Promise.all(
+            recipes.content.map((recipe: Recipes) => convertToWebP(recipe.image_url))
+          );
+          setConvertedImages(converted); // 변환된 이미지 저장
+        }
+      };
+  
+      convertImagesToWebP();
+    }, [recipes]);
+  
+
   // 페이지 변경 함수
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -53,13 +70,18 @@ const RecipeList = () => {
       {status === 'succeeded' && Array.isArray(recipes.content) && recipes.content.length > 0 ? ( 
         <>
           <ul className="menu-list">
-            {recipes.content.map((recipe: Recipes) => (
+            {recipes.content.map((recipe: Recipes, index: number) => (
               <li className="menu-item" key={recipe.id} onClick={() => {
                 const encodedImageUrl = encodeURIComponent(recipe.image_url);
                 navigate(`/recipe?${recipe.name}`, { state: { name: recipe.name, id: recipe.id, image_url: encodedImageUrl } });
             }}
             >
-                <img src={recipe.image_url} className='menu-image' alt="음식 이미지" loading="lazy" />
+                <img
+                  src={convertedImages[index] || recipe.image_url}
+                  className="menu-image"
+                  alt="음식 이미지"
+                  loading="lazy"
+                />
                 <h2 className='recipe-name'>{recipe.name}</h2>
               </li>
             ))}
