@@ -2,12 +2,13 @@ import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../styles/nav.css";
-import { RootState, AppDispatch } from "../store/store";
-import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
+import { AppDispatch } from "../store/store";
+import { useDispatch } from "react-redux";
 import { resetCategory } from '../store/slices/categorySlice';
+import { setMenuId } from '../store/slices/menuSlice';
+import { fetchRecipes } from '../store/slices/menuSlice';
 
 const useAppDispatch = () => useDispatch<AppDispatch>();
-const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const Navigation = () => {
     const API_URL = process.env.REACT_APP_API_URL;
@@ -72,6 +73,8 @@ const Navigation = () => {
     // 로고 클릭 시 카테고리 초기화 및 메인 페이지 이동
     const handleLogoClick = () => {
         dispatch(resetCategory());
+        dispatch(setMenuId(undefined)); 
+        dispatch(fetchRecipes({ page: 0 })); 
         navigate('/'); 
     };
 

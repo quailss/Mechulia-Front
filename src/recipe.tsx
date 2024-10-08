@@ -124,6 +124,7 @@ const Recipe: React.FC = () => {
                 setIsButtonActive(false);
 
                 //새로고침
+                dispatch(fetchPreviewReviews(recipeId));
                 dispatch(fetchReviews({ recipeId, page }));
             }
         } catch(error) {
