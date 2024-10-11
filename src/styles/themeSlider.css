@@ -55,58 +55,48 @@
     border-radius: 15px;
   }
   
-  .slide-text-box {
-    width: 100%;
-    height: 350px;
-    transition: width 0.5s ease;
-  }
-
-  .slide-text{
-    color: black;
-    font-size: 26px;
-    font-weight: bold !important;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 30px; 
-    padding-top: 10px;
-  }
-  
-  .test{
-    font-weight: bold !important;
-  }
-
   .slide-image-container {
-    width: 0;
+    width: 100%;  /* 이미지가 처음에 보이는 영역 */
     height: 100%;
     overflow: hidden;
     transition: width 0.5s ease;
-  }
-  
-  .slide-image {
+}
+
+.slide-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 15px 0px 0px 15px;
     transition: all 0.5s ease;
-  }
-  
-  /* 마우스를 올리면 슬라이드 확장 */
-  .slide:hover {
-    width: calc(2 * 22% + 50px); 
-    z-index: 10; 
-  }
-  
-  .slide:hover .slide-image-container {
-    width: 53%; 
-  }
-  
-  .slide:hover .slide-text-box {
-    width: 47%; 
-    background-color: rgba(0,0,0,0.8);
-  }
+}
 
-  .slide:hover .slide-text {
+/* 마우스를 올리면 슬라이드가 오른쪽으로 확장되며 텍스트가 나타남 */
+.slide:hover {
+    width: calc(2 * 22% + 50px);
+    z-index: 10;
+}
+
+.slide:hover .slide-text-box {
+    width: 47%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.slide:hover .slide-image-container {
+    width: 53%;
+}
+
+.slide-text-box {
+    width: 0;  /* 처음에는 텍스트가 보이지 않음 */
+    height: 350px;
+    transition: width 0.5s ease;
+}
+
+.slide-text {
     color: white;
-  }
-  
-  
+    font-size: 26px;
+    font-weight: bold !important;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 30px;
+    padding-top: 10px;
+}

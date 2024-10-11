@@ -58,7 +58,7 @@ const ThemeSlider: React.FC = () => {
                 <div key={index} className="slide" onClick={() => handleSlideClick(slide.keyword, slide.text)}>
                 <div className="slide-box">
                     <div className="slide-image-container">
-                    <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
+                        <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
                     </div>
                     <div className="slide-text-box">
                         <h2 className="slide-text">{slide.text}</h2>
@@ -74,7 +74,7 @@ const ThemeSlider: React.FC = () => {
                 <div key={index} className="slide" onClick={() => handleSlideClick(slide.keyword, slide.text)}>
                 <div className="slide-box">
                     <div className="slide-image-container">
-                    <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
+                        <img src={slide.src} alt={`slide-${index}`} className="slide-image" />
                     </div>
                     <div className="slide-text-box">
                         <h2 className="slide-text">{slide.text}</h2>
