@@ -61,7 +61,6 @@
 | 최가람 | 백엔드       | 
 | 곽두현 | 백엔드       | 
 | 유현 | 디자이너       | 
-<br><br>
 
 ### 기술스택
 ![기술 스택](https://github.com/user-attachments/assets/93b985fb-099c-4d6f-ba1c-e5160a7b1020)
