@@ -63,5 +63,5 @@
 | 유현 | 디자이너       | 
 
 ### 기술스택
-<img src="https://github.com/user-attachments/assets/81e4dc12-437e-42c7-a339-95c8b6605071" alt="기술 스택" width="200" height="300"/>
+<img src="https://github.com/user-attachments/assets/81e4dc12-437e-42c7-a339-95c8b6605071" alt="기술 스택" width="400" height="700"/>
 
